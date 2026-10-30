@@ -1,0 +1,186 @@
+{
+ "availability_calendar": {
+  "type": "success",
+  "time_zone": "Asia/Singapore",
+  "closed_dates": [
+   "D1"
+  ],
+  "data": {
+   "D0": {
+    "D0T08:00:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D0T08:30:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D0T09:00:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D0T09:30:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D0T10:00:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": true
+    },
+    "D0T10:30:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D0T11:00:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D0T11:30:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": true
+    },
+    "D0T12:00:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    }
+   },
+   "D2": {
+    "D2T08:00:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D2T08:30:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D2T09:00:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D2T09:30:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D2T10:00:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D2T10:30:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D2T11:00:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D2T11:30:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D2T12:00:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    }
+   },
+   "D9": {
+    "D9T08:00:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D9T08:30:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D9T09:00:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": true
+    },
+    "D9T09:30:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D9T10:00:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D9T10:30:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D9T11:00:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D9T11:30:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    },
+    "D9T12:00:00.000Z": {
+     "tc_points_rate": null,
+     "is_variable_rate": false,
+     "fixed_amount": null,
+     "is_available": false
+    }
+   }
+  },
+  "alternate_timeslots": {
+   "D2": [
+    "D2T12:30:00.000Z"
+   ]
+  },
+  "tc_points_by_day": {},
+  "daily_max_tc_points_rates": {}
+ }
+}

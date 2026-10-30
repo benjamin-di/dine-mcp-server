@@ -1,0 +1,40 @@
+{
+ "AvailableDates": [
+  {
+   "Date": "D0T00:00:00",
+   "AvailableTimes": [
+    {
+     "TimeSlot": "17:00:00",
+     "AvailableAreaIds": [
+      101
+     ]
+    },
+    {
+     "TimeSlot": "19:15:00",
+     "AvailableAreaIds": [
+      101,
+      102
+     ]
+    }
+   ],
+   "Areas": [
+    {
+     "Id": 101,
+     "Name": "Main Dining Room",
+     "HasAvailability": true
+    }
+   ]
+  },
+  {
+   "Date": "D2T00:00:00",
+   "AvailableTimes": [
+    {
+     "TimeSlot": "20:00:00",
+     "AvailableAreaIds": [
+      102
+     ]
+    }
+   ]
+  }
+ ]
+}

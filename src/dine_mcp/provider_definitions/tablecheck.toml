@@ -1,0 +1,26 @@
+# TableCheck: the public reservation page and its availability calendar. No account.
+# Evidence (2026-10-29): the reserve page and availability_calendar_v2 answered signed-out requests for
+# venues in Singapore and Tokyo; no challenge. One calendar request covers about two months of dates
+# but only the anchor time +-2 h. The booking window is not published.
+schema = 1
+key = "tablecheck"
+name = "TableCheck"
+access_mode = "public"
+maturity = "beta"
+last_verified = "2026-10-29"
+countries = ["JP", "HK", "SG", "KR", "TW", "TH", "AU", "GB", "US"]
+hosts = ["www.tablecheck.com", "production.tablecheck.com"]
+url_patterns = [
+  '^https://www\.tablecheck\.com/(?:[a-z]{2}(?:-[A-Za-z]{2})?/)?shops/(?P<ref>[a-z0-9][a-z0-9-]{1,80})(?:[/?]|$)',
+  '^https://www\.tablecheck\.com/[a-z]{2}(?:-[A-Za-z]{2})?/(?!shops/|policy|users|company|join|not-found|reservation_requests)(?P<ref>[a-z0-9][a-z0-9-]{1,80})/(?:reserve|menus|available)',
+]
+link_sources = ["tablecheck.com"]
+request_interval_seconds = 2.0
+daily_request_budget = 300
+person_daily_share = 0.5
+cache_ttl_seconds = 120
+terms = "TableCheck's terms (Art. 16.1) restrict automated access without permission. dine-mcp reads only the public reservation page and calendar, for a person checking a table themselves, at human pace; it never books."
+credit = "Endpoint shapes from mvanhorn/printing-press-library (tablecheck, Apache-2.0), which credits nbw/tc-mcp."
+
+[canary]
+ref = "sushi-tokyo81"

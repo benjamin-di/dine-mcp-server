@@ -1,0 +1,379 @@
+[
+ {
+  "_meta": {
+   "fastmcp": {
+    "tags": []
+   }
+  },
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": true,
+   "readOnlyHint": true
+  },
+  "description": "Identify one named restaurant and its booking channels (provider and venue on it, phone,\nwebsite). Give exactly one of name (with area and country when known), url or\ngoogle_place_id. Returns {venues: [{venue_id, name, address, time_zone, channels\n[{kind, access_mode, url, text, verified}], match {confidence, evidence}}], candidates\n[{name, address, google_place_id, confidence}], note}. Candidates mean \"not sure which\":\nask which one unless the request uniquely identifies it, then call again with its\ngoogle_place_id. Do not infer the venue country from the person's location. Not a cuisine\nor area search.",
+  "inputSchema": {
+   "additionalProperties": false,
+   "properties": {
+    "area": {
+     "anyOf": [
+      {
+       "maxLength": 80,
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Where it is: district or city ('Central', 'Shibuya')"
+    },
+    "country": {
+     "anyOf": [
+      {
+       "pattern": "^[A-Za-z]{2}$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "ISO 3166-1 alpha-2 country code ('HK', 'JP')"
+    },
+    "google_place_id": {
+     "anyOf": [
+      {
+       "maxLength": 64,
+       "minLength": 6,
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "A Google place id (ChIJ…) from a maps tool"
+    },
+    "limit": {
+     "default": 5,
+     "description": "Candidates to return (1-10)",
+     "maximum": 10,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "name": {
+     "anyOf": [
+      {
+       "maxLength": 120,
+       "minLength": 2,
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "The restaurant's name, any script ('Amber', '鮨 しこう')"
+    },
+    "url": {
+     "anyOf": [
+      {
+       "maxLength": 2048,
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "A booking page link (SevenRooms, TableCheck, ResDiary); never fetched"
+    }
+   },
+   "type": "object"
+  },
+  "name": "dine_find_venue",
+  "outputSchema": {
+   "additionalProperties": true,
+   "properties": {
+    "candidates": {
+     "items": {
+      "additionalProperties": true,
+      "type": "object"
+     },
+     "title": "Candidates",
+     "type": "array"
+    },
+    "note": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "title": "Note"
+    },
+    "venues": {
+     "items": {
+      "additionalProperties": true,
+      "type": "object"
+     },
+     "title": "Venues",
+     "type": "array"
+    }
+   },
+   "required": [
+    "venues",
+    "candidates"
+   ],
+   "title": "FindVenueOutput",
+   "type": "object"
+  },
+  "title": "Find venue"
+ },
+ {
+  "_meta": {
+   "fastmcp": {
+    "tags": []
+   }
+  },
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": true,
+   "readOnlyHint": true
+  },
+  "description": "One venue in full: channels, each provider's booking rules (how many days ahead,\nparty size limits, card or deposit), experiences or courses, booking links, opening hours\nand sources. Costs one provider request per channel when not cached.",
+  "inputSchema": {
+   "additionalProperties": false,
+   "properties": {
+    "venue_id": {
+     "description": "A venue_id from dine_find_venue",
+     "maxLength": 40,
+     "minLength": 3,
+     "type": "string"
+    }
+   },
+   "required": [
+    "venue_id"
+   ],
+   "type": "object"
+  },
+  "name": "dine_get_venue",
+  "outputSchema": {
+   "additionalProperties": true,
+   "properties": {
+    "channels": {
+     "items": {
+      "additionalProperties": true,
+      "type": "object"
+     },
+     "title": "Channels",
+     "type": "array"
+    },
+    "name": {
+     "title": "Name",
+     "type": "string"
+    },
+    "venue_id": {
+     "title": "Venue Id",
+     "type": "string"
+    }
+   },
+   "required": [
+    "venue_id",
+    "name",
+    "channels"
+   ],
+   "title": "VenueOutput",
+   "type": "object"
+  },
+  "title": "Get venue"
+ },
+ {
+  "_meta": {
+   "fastmcp": {
+    "tags": []
+   }
+  },
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": true,
+   "readOnlyHint": true
+  },
+  "description": "Table availability for venues over dates, a time window and a party size. One result per\nvenue and channel: {venue_id, venue_name, channel, status, time_zone, slots [{start, kind,\narea, experience, price, requires_card, booking_link}], coverage {dates_checked,\ndates_not_checked}, observed_at, served_from, booking_link, opens_at, min_party, max_party, contact,\nnote}. status: ok, none_available, not_yet_open (see opens_at), party_too_small, party_too_large, closed,\ncontact_only, not_connected, blocked, rate_limited, unavailable, unsupported, unknown_venue,\nskipped_deadline. Large requests are refused with too_broad: narrow them.",
+  "inputSchema": {
+   "additionalProperties": false,
+   "properties": {
+    "date_from": {
+     "description": "First date, YYYY-MM-DD, venue local",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+     "type": "string"
+    },
+    "date_to": {
+     "anyOf": [
+      {
+       "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Last date inclusive (default date_from); at most 7 days"
+    },
+    "kinds": {
+     "anyOf": [
+      {
+       "items": {
+        "enum": [
+         "bookable",
+         "request",
+         "waitlist"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Slot kinds to include (default bookable and request)"
+    },
+    "party_size": {
+     "default": 2,
+     "description": "Number of diners",
+     "maximum": 20,
+     "minimum": 1,
+     "type": "integer"
+    },
+    "response_format": {
+     "default": "concise",
+     "description": "concise: up to 6 slots per venue and day",
+     "enum": [
+      "concise",
+      "detailed"
+     ],
+     "type": "string"
+    },
+    "time_from": {
+     "default": "17:00",
+     "description": "Earliest time, HH:MM venue local",
+     "pattern": "^\\d{2}:\\d{2}$",
+     "type": "string"
+    },
+    "time_to": {
+     "default": "22:30",
+     "description": "Latest time, HH:MM; earlier than time_from crosses midnight",
+     "pattern": "^\\d{2}:\\d{2}$",
+     "type": "string"
+    },
+    "venue_ids": {
+     "description": "1-5 venue_ids from dine_find_venue",
+     "items": {
+      "maxLength": 40,
+      "minLength": 3,
+      "type": "string"
+     },
+     "maxItems": 5,
+     "minItems": 1,
+     "type": "array"
+    }
+   },
+   "required": [
+    "venue_ids",
+    "date_from"
+   ],
+   "type": "object"
+  },
+  "name": "dine_check_availability",
+  "outputSchema": {
+   "additionalProperties": true,
+   "properties": {
+    "query": {
+     "additionalProperties": true,
+     "title": "Query",
+     "type": "object"
+    },
+    "results": {
+     "items": {
+      "additionalProperties": true,
+      "type": "object"
+     },
+     "title": "Results",
+     "type": "array"
+    },
+    "summary": {
+     "additionalProperties": true,
+     "title": "Summary",
+     "type": "object"
+    }
+   },
+   "required": [
+    "query",
+    "results",
+    "summary"
+   ],
+   "title": "AvailabilityOutput",
+   "type": "object"
+  },
+  "title": "Check availability"
+ },
+ {
+  "_meta": {
+   "fastmcp": {
+    "tags": []
+   }
+  },
+  "annotations": {
+   "destructiveHint": false,
+   "idempotentHint": true,
+   "openWorldHint": true,
+   "readOnlyHint": true
+  },
+  "description": "Version, each provider's mode, maturity, whether it is on, today's request budget and\nany pause after provider pushback. Default is offline; check=true runs paced, budgeted\npublic-widget canaries with a 15-minute cooldown. Health never contacts a provider.",
+  "inputSchema": {
+   "additionalProperties": false,
+   "properties": {
+    "check": {
+     "default": false,
+     "description": "Run budgeted provider canaries (15-minute cooldown)",
+     "type": "boolean"
+    }
+   },
+   "type": "object"
+  },
+  "name": "dine_status",
+  "outputSchema": {
+   "additionalProperties": true,
+   "properties": {
+    "providers": {
+     "items": {
+      "additionalProperties": true,
+      "type": "object"
+     },
+     "title": "Providers",
+     "type": "array"
+    },
+    "version": {
+     "title": "Version",
+     "type": "string"
+    }
+   },
+   "required": [
+    "version",
+    "providers"
+   ],
+   "title": "StatusOutput",
+   "type": "object"
+  },
+  "title": "Status"
+ }
+]

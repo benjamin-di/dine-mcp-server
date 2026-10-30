@@ -1,0 +1,24 @@
+dine-mcp
+Copyright 2026 benjamin-di
+
+This product is licensed under the Apache License, Version 2.0 (LICENSE).
+
+The bundled optional MCP App includes third-party software; its complete notices ship in
+src/dine_mcp/ui/THIRD_PARTY_LICENSES.html (ui/THIRD_PARTY_LICENSES.html in the Python package).
+Its provider adapters were informed by these projects,
+which are credited with thanks:
+
+- printing-press-library (https://github.com/mvanhorn/printing-press-library), tablecheck CLI,
+  Apache License 2.0: TableCheck endpoint shapes (reservation page, availability calendar) and Tabelog suggestions/metadata.
+  That work credits nbw/tc-mcp for the search and calendar parameters.
+- resdiary-mcp (https://github.com/matuspavliscak/resdiary-mcp), MIT License:
+  ResDiary endpoint shapes (Setup, availability).
+- kvendrik/zenchef (https://github.com/kvendrik/zenchef): Zenchef and Formitable guest read contracts.
+- tellang/catchtable-cli (https://github.com/tellang/catchtable-cli): Korean catalogue read contracts.
+- restaurant-cli (https://github.com/omarshahine/restaurant-cli), MIT License:
+  the provider-with-capabilities pattern.
+
+Venue identity uses Google Maps data through google-maps-keyless-mcp
+(https://github.com/benjamin-di/google-maps-mcp, MIT). Map data © Google.
+The Windows-to-IANA time zone table follows the Unicode CLDR windowsZones data
+(Unicode License v3).

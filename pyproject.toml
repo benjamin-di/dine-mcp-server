@@ -1,0 +1,77 @@
+[project]
+name = "dine-mcp"
+version = "0.2.3"
+description = "Restaurant table availability across booking systems (SevenRooms, TableCheck, ResDiary, …) as an MCP server"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "benjamin-di" }]
+requires-python = ">=3.12"
+keywords = ["mcp", "restaurant", "reservations", "availability", "sevenrooms", "tablecheck", "resdiary"]
+dependencies = [
+    # FastMCP 4 (MCP SDK 2): stateless JSON over streamable HTTP, or stdio. Same pin as the place source.
+    "fastmcp==4.0.10",
+    "httpx>=0.27,<0.29",
+    "filelock>=4.2.1,<5",
+    # Venue identity and booking links from Google Maps, through maps-mcp's library interface.
+    "google-maps-keyless-mcp>=0.6.1,<0.7",
+    "tzdata>=2025.2",
+]
+
+[project.urls]
+Repository = "https://github.com/benjamin-di/dine-mcp-server"
+Issues = "https://github.com/benjamin-di/dine-mcp-server/issues"
+
+[project.scripts]
+dine-mcp = "dine_mcp.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "pytest-asyncio>=0.24", "ruff>=0.14", "mypy>=1.18"]
+
+[tool.uv]
+# Security floors for transitive dependencies (as maps-mcp).
+constraint-dependencies = [
+    "starlette>=1.3.1,<2",
+    "cryptography>=50.0.0",
+    "joserfc>=1.6.8",
+    "idna>=3.15",
+    "pydantic-settings>=2.14.2",
+    "pyjwt>=2.13.0",
+    "python-multipart>=0.0.31",
+    "authlib>=1.7.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dine_mcp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["tests"]
+addopts = "-q -m 'not live'"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = ["live: contacts real providers (operator-run, export-ignored)"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+ignore = ["SIM105"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["dine_mcp"]
+
+[tool.mypy]
+python_version = "3.12"
+packages = ["dine_mcp"]
+mypy_path = "src"
+ignore_missing_imports = true
+warn_unused_ignores = true
+check_untyped_defs = true
+

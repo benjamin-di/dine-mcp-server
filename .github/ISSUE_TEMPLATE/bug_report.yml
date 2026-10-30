@@ -1,0 +1,30 @@
+name: Bug report
+description: Report a failure or incorrect availability result.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include tokens, state files, personal details or real booking records.
+        Report security issues privately through the Security tab.
+  - type: input
+    id: version
+    attributes:
+      label: Version and installation method
+      placeholder: "0.1.0, uvx, Python 3.12, Linux"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Use a public venue link or a synthetic example, with the provider and venue time zone.
+    validations:
+      required: true
+  - type: textarea
+    id: result
+    attributes:
+      label: Expected and actual result
+      description: Include the status or error code, observation time and a redacted log if useful.
+    validations:
+      required: true

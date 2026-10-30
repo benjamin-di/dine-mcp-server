@@ -1,0 +1,10 @@
+# United Kingdom. ResDiary and SevenRooms cover many independents and groups; OpenTable is common
+# but its terms bar automated assistants (listing only).
+schema = 1
+country = "GB"
+name = "United Kingdom"
+time_zones = ["Europe/London"]
+currency = "GBP"
+locales = ["en-GB"]
+providers = ["resdiary", "sevenrooms", "tablecheck"]
+place_source = "google"

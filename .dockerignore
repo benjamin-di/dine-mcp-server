@@ -1,0 +1,18 @@
+.git
+.github
+.venv
+.deps
+.artifacts
+**/__pycache__
+**/.pytest_cache
+**/.ruff_cache
+**/*.pyc
+tests
+scripts
+docs
+private
+publish
+.env
+
+# The runtime uses the packaged static App; development Node dependencies stay outside the context.
+tools

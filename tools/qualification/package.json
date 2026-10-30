@@ -1,0 +1,9 @@
+{
+  "name": "dine-protocol-qualification",
+  "private": true,
+  "version": "0.1.0",
+  "devDependencies": {
+    "@modelcontextprotocol/conformance": "0.1.16",
+    "@modelcontextprotocol/inspector": "2.13.0"
+  }
+}

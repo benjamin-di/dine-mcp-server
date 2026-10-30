@@ -1,0 +1,9 @@
+schema = 1
+country = "KR"
+name = "South Korea"
+time_zones = ["Asia/Seoul"]
+currency = "KRW"
+locales = ["ko-KR", "en-KR"]
+providers = ["catchtable", "tablecheck", "sevenrooms"]
+place_source = "google"
+notes = ["Google venue coverage is limited. Opt-in experimental CatchTable discovery can supplement an empty or unavailable place source; it does not supply seat inventory."]

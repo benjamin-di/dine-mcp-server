@@ -1,0 +1,26 @@
+# SevenRooms: the public guest reservation widget. No account, no API key.
+# Evidence (2026-10-29): venue_info and the range endpoint answered signed-out requests at human pace
+# for venues in Singapore and London; no challenge, no rate-limit headers. Three days per request
+# (num_days=7 is refused). Closed days are empty lists; beyond the window and above the party maximum
+# look like sold out, so those come from the widget settings.
+schema = 1
+key = "sevenrooms"
+name = "SevenRooms"
+access_mode = "public"
+maturity = "beta"
+last_verified = "2026-10-29"
+countries = ["HK", "GB", "US", "AE", "AU", "SG", "IE", "CA"]
+hosts = ["www.sevenrooms.com", "sevenrooms.com"]
+url_patterns = [
+  '^https://(?:www\.)?sevenrooms\.com/(?:reservations|app/reservations|experiences|landing|explore)/(?P<ref>[A-Za-z0-9_-]{2,64})(?:[/?]|$)',
+]
+link_sources = ["sevenrooms.com"]
+request_interval_seconds = 2.0
+daily_request_budget = 300
+person_daily_share = 0.5
+cache_ttl_seconds = 120
+terms = "SevenRooms' terms (section 10) restrict automated access. dine-mcp reads only the public widget, for a person checking a table themselves, at human pace; it never books."
+credit = "Request shapes informed by an internal SevenRooms availability watcher."
+
+[canary]
+ref = "claplondon"

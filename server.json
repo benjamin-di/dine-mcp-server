@@ -1,0 +1,29 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.benjamin-di/dine-mcp",
+  "title": "Dine MCP",
+  "description": "Restaurant table availability across SevenRooms, TableCheck and ResDiary. Read-only; never books.",
+  "version": "0.2.3",
+  "repository": {
+    "url": "https://github.com/benjamin-di/dine-mcp-server",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "dine-mcp",
+      "version": "0.2.3",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "named",
+          "name": "--transport",
+          "value": "stdio"
+        }
+      ]
+    }
+  ]
+}

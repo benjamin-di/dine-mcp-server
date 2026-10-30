@@ -1,0 +1,9 @@
+# Singapore. SevenRooms, TableCheck and ResDiary all serve it; Chope (Grab) is common but not supported.
+schema = 1
+country = "SG"
+name = "Singapore"
+time_zones = ["Asia/Singapore"]
+currency = "SGD"
+locales = ["en-SG"]
+providers = ["sevenrooms", "tablecheck", "resdiary"]
+place_source = "google"

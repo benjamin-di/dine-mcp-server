@@ -1,0 +1,15 @@
+schema = 1
+key = "zenchef"
+name = "Zenchef"
+access_mode = "public"
+maturity = "experimental"
+countries = ["FR", "NL", "BE", "GB", "DE", "CH", "ES", "IT"]
+hosts = ["bookings-middleware.zenchef.com", "bookings.zenchef.com"]
+url_patterns = ['^https://bookings\.zenchef\.com/results\?(?:[^#]*&)?rid=(?P<ref>[1-9][0-9]{0,11})(?:&|$)']
+link_sources = ["zenchef.com"]
+request_interval_seconds = 2.0
+daily_request_budget = 100
+person_daily_share = 0.5
+cache_ttl_seconds = 120
+terms = "Experimental, disabled by default. Static endpoint review is not permission or live acceptance. Enable only after checking current Zenchef and venue terms and obtaining any required permission. No login, booking, payment, offer purchase or challenge bypass."
+credit = "Read contracts reviewed in kvendrik/zenchef at d324cc9a97196b528ad66824ae406b6fc5f792e7."

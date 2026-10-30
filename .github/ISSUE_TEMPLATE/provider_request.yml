@@ -1,0 +1,17 @@
+name: Provider request
+description: Suggest another booking system or improve provider coverage.
+title: "[Provider] "
+body:
+  - type: input
+    id: provider
+    attributes:
+      label: Booking system and countries
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Public guest widget and availability
+      description: Link a public booking page and describe whether availability needs an account. Do not include credentials or reservations.
+    validations:
+      required: true

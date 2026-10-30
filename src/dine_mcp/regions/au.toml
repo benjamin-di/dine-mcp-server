@@ -1,0 +1,9 @@
+# Australia. ResDiary is widespread; SevenRooms serves groups and hotels.
+schema = 1
+country = "AU"
+name = "Australia"
+time_zones = ["Australia/Sydney", "Australia/Melbourne", "Australia/Brisbane", "Australia/Perth", "Australia/Adelaide"]
+currency = "AUD"
+locales = ["en-AU"]
+providers = ["resdiary", "sevenrooms"]
+place_source = "google"

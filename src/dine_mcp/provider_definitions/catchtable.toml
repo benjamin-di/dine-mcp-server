@@ -1,0 +1,15 @@
+schema = 1
+key = "catchtable"
+name = "CatchTable (Korea)"
+access_mode = "listing"
+maturity = "experimental"
+countries = ["KR"]
+hosts = ["ct-api.catchtable.co.kr", "app.catchtable.co.kr"]
+url_patterns = ['^https://app\.catchtable\.co\.kr/ct/shop/(?P<ref>[A-Za-z0-9_-]{1,100})(?:[/?]|$)']
+link_sources = ["catchtable.co.kr"]
+request_interval_seconds = 2.0
+daily_request_budget = 100
+person_daily_share = 0.5
+cache_ttl_seconds = 300
+terms = "Experimental Korean venue discovery only, disabled by default. Review current CatchTable terms and obtain any required permission before enabling. Anonymous API acceptance is unverified. No session cookie, login, seat read, reservation or challenge bypass. International CatchTable is a separate contract."
+credit = "Catalogue read contracts reviewed in tellang/catchtable-cli at 5cae099fd0766aa4ecb137ecc2e495c4dea6c6b2."

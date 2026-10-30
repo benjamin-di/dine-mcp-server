@@ -1,0 +1,9 @@
+{
+ "availability_calendar": {
+  "type": "success",
+  "time_zone": "Asia/Tokyo",
+  "closed_dates": [],
+  "data": {},
+  "alternate_timeslots": {}
+ }
+}

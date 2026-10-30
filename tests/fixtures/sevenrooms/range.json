@@ -1,0 +1,95 @@
+{
+ "status": 200,
+ "data": {
+  "availability": {
+   "D0": [
+    {
+     "name": "Dinner",
+     "shift_category": "DINNER",
+     "is_closed": false,
+     "is_forced_empty_availability": false,
+     "times": [
+      {
+       "time": "18:00",
+       "time_iso": "DATE 18:00:00",
+       "type": "book",
+       "public_time_slot_description": "Dinner",
+       "public_description_title": "Dinner Tasting",
+       "require_credit_card": true,
+       "cc_payment_rule": "save_for_later",
+       "cost": 0.0,
+       "duration": 120,
+       "is_held": false,
+       "access_persistent_id": "synthetic-access-1"
+      },
+      {
+       "time": "18:00",
+       "time_iso": "DATE 18:00:00",
+       "type": "book",
+       "public_time_slot_description": "Dinner",
+       "public_description_title": "Dinner Tasting",
+       "require_credit_card": true,
+       "cc_payment_rule": "save_for_later",
+       "cost": 0.0,
+       "duration": 120,
+       "is_held": false,
+       "access_persistent_id": "synthetic-access-1"
+      },
+      {
+       "time": "18:30",
+       "time_iso": "DATE 18:30:00",
+       "type": "book",
+       "public_time_slot_description": "Dinner",
+       "public_description_title": "Chef's Counter",
+       "require_credit_card": true,
+       "cc_payment_rule": "save_for_later",
+       "cost": 0.0,
+       "duration": 120,
+       "is_held": false,
+       "access_persistent_id": "synthetic-access-1"
+      },
+      {
+       "time": "21:00",
+       "time_iso": "DATE 21:00:00",
+       "type": "request",
+       "public_time_slot_description": "Dinner",
+       "public_description_title": "Dinner Tasting",
+       "require_credit_card": false,
+       "cc_payment_rule": "save_for_later",
+       "cost": 0.0,
+       "duration": 120,
+       "is_held": false,
+       "access_persistent_id": null,
+       "is_requestable": true
+      }
+     ]
+    }
+   ],
+   "D1": [],
+   "D2": [
+    {
+     "name": "Dinner",
+     "is_closed": false,
+     "times": [
+      {
+       "time": "19:30",
+       "time_iso": "DATE 19:30:00",
+       "type": "request",
+       "public_time_slot_description": "Dinner",
+       "public_description_title": "Dinner Tasting",
+       "require_credit_card": false,
+       "cc_payment_rule": "save_for_later",
+       "cost": 0.0,
+       "duration": 120,
+       "is_held": false,
+       "access_persistent_id": null,
+       "is_requestable": true
+      }
+     ]
+    }
+   ]
+  }
+ },
+ "csrftoken": null,
+ "request_id": "synthetic"
+}

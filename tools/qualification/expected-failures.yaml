@@ -1,0 +1,4 @@
+# Generic scenarios selected in scripts/qualify-protocol.py; no expected failures.
+# The remaining upstream scenarios require named test tools, resources, elicitation or
+# stateful SSE. Dine intentionally exposes only its four read tools over stateless JSON.
+server: []

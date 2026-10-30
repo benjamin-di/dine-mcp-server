@@ -1,0 +1,25 @@
+# secrets and local state
+.env
+
+# python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# gate
+.deps/
+.artifacts/
+
+# local overrides and users files
+users.toml
+overrides.toml
+
+# protocol qualification downloads and reports
+node_modules/
+results/

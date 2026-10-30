@@ -1,0 +1,11 @@
+{
+ "Name": "Example Seasonal",
+ "MinOnlinePartySize": 1,
+ "MaxOnlinePartySize": 8,
+ "AcceptBookingsDaysInAdvance": null,
+ "Services": [],
+ "Areas": [],
+ "TimeZoneName": "GMT Standard Time",
+ "Iso2CountryCode": "IE",
+ "CurrencyCode": "EUR"
+}

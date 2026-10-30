@@ -1,0 +1,15 @@
+schema = 1
+key = "tabelog"
+name = "Tabelog"
+access_mode = "listing"
+maturity = "experimental"
+countries = ["JP"]
+hosts = ["tabelog.com"]
+url_patterns = ['^https://tabelog\.com/(?:en/)?(?P<ref>[a-z-]{2,24}/A[0-9]{4}/A[0-9]{6}/[0-9]{7,10})/(?:\?|$)']
+link_sources = ["tabelog.com"]
+request_interval_seconds = 2.0
+daily_request_budget = 100
+person_daily_share = 0.5
+cache_ttl_seconds = 300
+terms = "Experimental listing only, disabled by default. Review current Tabelog terms and obtain any required permission before enabling. Public restaurant suggestions and facts are not date/party seat inventory. No login, reservations, account data or challenge bypass."
+credit = "Read contracts reviewed in mvanhorn/printing-press-library at 695dff9335ffaba94ba2d3aa14940bf568bc4cad (tabelog)."

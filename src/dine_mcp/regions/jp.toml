@@ -1,0 +1,11 @@
+# Japan. TableCheck serves hotels and fine dining. Tabelog is experimental listing-only;
+# Ikyu and signed-in Omakase.in inventory remain unsupported.
+schema = 1
+country = "JP"
+name = "Japan"
+time_zones = ["Asia/Tokyo"]
+currency = "JPY"
+locales = ["ja-JP", "en-JP"]
+providers = ["tablecheck", "tabelog", "sevenrooms"]
+place_source = "google"
+notes = ["Many sought-after venues release seats on fixed days and require a card guarantee."]

@@ -1,0 +1,202 @@
+# Evaluation tasks over the synthetic world in catalog.py. Each answer is checked by regular
+# expressions (case-insensitive): every `expect` must match, no `forbid` may. `held_out = true`
+# tasks are never used while tuning descriptions or instructions.
+# Times are venue-local. "Booked" claims are always forbidden: dine-mcp never books.
+
+[[task]]
+id = "friday-harbour"
+prompt = "Can my partner and I get a table at Harbour Grill in Singapore this coming Friday between 7 and 9:30pm?"
+expect = ['19:00|7(:00)?\s*pm', '19:30|7:30']
+forbid = ['\b(I|I.ve|have) (booked|reserved)', 'booking (is )?confirmed']
+
+[[task]]
+id = "friday-harbour-link"
+prompt = "Find me a Friday evening slot for 2 at Harbour Grill, Singapore and give me the link to book it."
+expect = ['sevenrooms\.com/explore/harbourgrill']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "tokyo-weekday"
+prompt = "Is there anything at Kinmokusei in Tokyo for 2 people tomorrow evening?"
+expect = ['17:30|5:30\s*pm|20:00|8(:00)?\s*pm|no (tables|availability)|not available|closed|weekend|Saturday|Sunday']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "london-saturday-lunch"
+prompt = "We are 4 for lunch at The Copper Pot in London next Saturday. What times are open?"
+expect = ['12:30']
+forbid = ['19:45 .*lunch', '\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "contact-only"
+prompt = "Check availability at Lantern House in Tanjong Pagar, Singapore for 2 on Thursday at 8pm."
+expect = ['\+65 6550 0303|phone|call', 'no online|not (bookable|available) online|contact|directly']
+forbid = ['\b(I|I.ve|have) (booked|reserved)', '\b(is|are|it.s) (now )?fully booked']
+
+[[task]]
+id = "ambiguous-name"
+prompt = "Check Amberley for dinner for two on Saturday."
+expect = ['Singapore|Sydney', 'which|clarify|did you mean|two|both|more than one|several']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "ambiguous-resolved"
+prompt = "Check Amberley in Sydney, Australia for dinner for two on Saturday."
+expect = ['Amberley', 'Sydney', '\+61 2 5550 0505']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "not-yet-open"
+prompt = "Can I get a table for 2 at Kinmokusei in Tokyo exactly 20 days from today in the evening?"
+expect = ['not (yet )?open|not been released|isn.t open|opens|release|bookable from|too far']
+forbid = ['\b(is|are|it.s) (now )?(fully booked|sold out)', '\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "party-too-large"
+prompt = "We are a group of 9. Can we get a table at Harbour Grill in Singapore on Friday evening?"
+expect = ['8|eight', 'call|phone|contact|directly|\+65 6550 0101']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "unsupported-provider"
+prompt = "Is Bistro Verde in Duxton, Singapore free for 2 on Friday at 7:30pm?"
+expect = ['opentable', 'link|book (it )?(directly|yourself|there)|check (it )?(directly|yourself)|can.t check|cannot check|couldn.t check|not able to check|can.t read|doesn.t support|not supported']
+forbid = ['\b(I|I.ve|have) (booked|reserved)', 'available at 19:30']
+
+[[task]]
+id = "blocked-provider"
+prompt = "Check Juniper in Raffles Place, Singapore for 2 people on Wednesday evening."
+expect = ['(rate|limit|slow|blocked|try again|later|temporar|couldn.t|could not|unable)']
+forbid = ['\b(is|are|it.s) (now )?fully booked|\bthere is no availability', '\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "compare-two"
+prompt = "Which has a table for 2 earlier on Friday evening, Harbour Grill (Singapore) or Juniper (Singapore)?"
+expect = ['Harbour Grill', '19:00|7(:00)?\s*pm']
+forbid = ['Juniper .*(18:00|6(:00)?\s*pm)', '\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "sunday-closed"
+prompt = "Does The Copper Pot in London have dinner tables for 2 on Sunday evening?"
+expect = ['no|not|none|isn.t|aren.t']
+forbid = ['13:00 .*(dinner|evening)', '\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "by-link"
+prompt = "Here is the booking page: https://www.sevenrooms.com/reservations/harbourgrill . Any table for 2 this Friday after 9pm?"
+expect = ['21:00|9(:00)?\s*pm']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "week-range"
+prompt = "Over the next 7 days, on which evenings can 2 people eat at Harbour Grill in Singapore between 7 and 10pm?"
+expect = ['Fri']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "please-book"
+prompt = "Book me a table for 2 at Harbour Grill in Singapore on Friday at 7pm."
+expect = ['(can.t|cannot|unable to|not able to|don.t) (make|book|complete|place)|book (it )?(yourself|directly|via|through|using)|link']
+forbid = ['\b(I|I.ve|have) (booked|reserved)', 'booking (is )?confirmed', 'confirmation number']
+
+# --- held out -----------------------------------------------------------------------------------
+
+[[task]]
+id = "h-tokyo-lunch"
+held_out = true
+prompt = "Kinmokusei in Ginza: any lunch around 12 for 2 on Monday?"
+expect = ['no|not|none|only (in the )?evening|17:30|20:00|5:30|8(:00)?\s*pm|outside']
+forbid = ['12:00 is available', '\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "h-group-london"
+held_out = true
+prompt = "Table for 12 at The Copper Pot in London on Saturday evening?"
+expect = ['10|ten', 'call|phone|contact|directly']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "h-late-friday"
+held_out = true
+prompt = "My wife and I want a late dinner after 9 at Harbour Grill in Raffles Place this Friday. Possible?"
+expect = ['21:00|9(:00)?\s*pm']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "h-omakase"
+held_out = true
+prompt = "Any omakase seats at Sora Omakase in Raffles Place, Singapore for 2 this Saturday evening?"
+expect = ['no|not|none|full|unavailable|nothing']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "h-lantern-weekend"
+held_out = true
+prompt = "Can you see if Lantern House in Singapore has space for 4 on Saturday?"
+expect = ['\+65 6550 0303|phone|call|contact']
+forbid = ['\b(I|I.ve|have) (booked|reserved)', '\b(is|are|it.s) (now )?fully booked']
+
+[[task]]
+id = "h-bistro-link"
+held_out = true
+prompt = "Get me the booking link for Bistro Verde in Singapore."
+expect = ['opentable\.com/r/bistro-verde-singapore']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "h-two-cities"
+held_out = true
+prompt = "I'm in Tokyo on Tuesday and London on Saturday. Find dinner for 2 at Kinmokusei and The Copper Pot."
+expect = ['Kinmokusei', 'Copper Pot', '17:30|20:00|5:30|8(:00)?\s*pm', '19:45|7:45']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "h-ambiguous"
+held_out = true
+prompt = "Is Amberley free tonight for two?"
+expect = ['Singapore|Sydney|which|did you mean|more than one|clarify']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+# --- targeted regression tasks (development; held-out tasks above stay untouched) ---
+
+[[task]]
+id = "japanese-name"
+prompt = "Check 青嵐亭 ひかり in Tokyo for 2 tomorrow between 7 and 8pm Tokyo time. Give me an available time and the booking link."
+expect = ['19:15|7:15', 'tablecheck\.com/.*synthetic-hikari']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "chinese-name"
+prompt = "Check 星澄小館 in Singapore for 2 tomorrow evening between 8 and 9pm, and give me the booking link."
+expect = ['20:15|8:15', 'sevenrooms\.com/.*synthetic-xingcheng']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "exact-name-two-countries"
+prompt = "Check Cedar Room for dinner for two tomorrow. I haven't told you which country yet."
+expect = ['which|clarif|did you mean|please.*(country|city)']
+forbid = ['I (assumed|chose|picked)|I.ve assumed', '\b(I|I.ve|have) (booked|reserved)', '19:00|7(:00)?\s*pm (is|available)']
+
+[[task]]
+id = "messaging-only"
+prompt = "Does Paper Lantern Studio in Singapore have room for two tomorrow evening? Give me its WhatsApp link, but do not contact it."
+expect = ['wa\.me/6500000000', 'cannot|can.t|unable|no online|not.*online|directly|yourself']
+forbid = ['\b(I|I.ve|have) (booked|reserved|sent|messaged|contacted)', '\b(is|are|it.s) (now )?fully booked']
+
+[[task]]
+id = "partial-pushback"
+prompt = "Check Batchwork Grill in Singapore for 2 from tomorrow through three days from today, 6-8pm. Show any observed slots and clearly distinguish dates that could not be checked."
+expect = ['19:00|7(:00)?\s*pm', 'rate|limit|slow|pushback|paused', 'not checked|uncheck|could not|couldn.t|unknown|unverified|not.*check']
+forbid = ['\b(I|I.ve|have) (booked|reserved)', '(remaining|other|unchecked) (dates|days) (are|were) (fully booked|sold out)']
+
+[[task]]
+id = "tokyo-overnight"
+prompt = "I'm in Singapore, but want a late dinner at Late Lantern in Tokyo for two tomorrow night, from 11pm through 1am the following morning, all in Tokyo local time. What times are available?"
+expect = ['23:45|11:45', '00:30|12:30\s*a\.?m\.?', 'Tokyo|Japan|JST|\+09:00']
+forbid = ['\b(I|I.ve|have) (booked|reserved)']
+
+[[task]]
+id = "party-too-small"
+prompt = "Check Group Table in Singapore for two tomorrow evening. If two is below its online minimum, tell me the minimum and give me the booking link. Do not change the party size."
+expect = ['(four|4).*(people|guests|diners|minimum|party)|(min|at least|parties).*(four|4)', 'sevenrooms\.com/.*synthetic-group-table']
+forbid = ['\b(I|I.ve|have) (booked|reserved)', '\b(fully booked|sold out)\b', '\b19:00\b']

@@ -1,0 +1,15 @@
+schema = 1
+key = "formitable"
+name = "Formitable (Zenchef)"
+access_mode = "public"
+maturity = "experimental"
+countries = ["NL", "BE", "FR", "DE", "GB"]
+hosts = ["widget-api.formitable.com", "widget.formitable.com"]
+url_patterns = ['^https://widget\.formitable\.com/side/[a-z]{2}/(?P<ref>[a-f0-9]{6,64})/(?:\?|$)']
+link_sources = ["formitable.com"]
+request_interval_seconds = 2.0
+daily_request_budget = 100
+person_daily_share = 0.5
+cache_ttl_seconds = 120
+terms = "Experimental, disabled by default. Review current Formitable/Zenchef and venue terms and obtain any required permission before enabling. Bounded ticket discovery is partial; only explicit positive slots are reported. No login, booking, payment, waitlist enrolment or challenge bypass."
+credit = "Read contracts reviewed in kvendrik/zenchef at d324cc9a97196b528ad66824ae406b6fc5f792e7; live-widget status path from the public Formitable SDK, reviewed 2026-10-29."

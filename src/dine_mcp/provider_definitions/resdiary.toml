@@ -1,0 +1,27 @@
+# ResDiary: the public booking widget's API. No account, no key.
+# Evidence (2026-10-29): Setup and AvailabilityForDateRange answered signed-out requests for venues in
+# Australia and Ireland behind Cloudflare without a challenge; 7 days per range request. Unknown or
+# departed venues answer HTTP 500. The diner portal (dishcult.com) challenges non-browser clients and
+# is never requested.
+schema = 1
+key = "resdiary"
+name = "ResDiary"
+access_mode = "public"
+maturity = "beta"
+last_verified = "2026-10-29"
+countries = ["GB", "IE", "AU", "NZ", "AE", "SG", "HK", "MY", "ZA"]
+hosts = ["booking.resdiary.com", ".resdiary.com"]
+url_patterns = [
+  '^https://booking(?:-[a-z]+)?\.resdiary\.com/widget/Standard/(?P<ref>[A-Za-z0-9_-]{1,80}(?:/\d{1,10})?)(?:[/?]|$)',
+  '^https://(?:www\.)?resdiary\.com/[Rr]estaurant/(?P<ref>[A-Za-z0-9_-]{1,80})(?:[/?]|$)',
+]
+link_sources = ["resdiary.com"]
+request_interval_seconds = 2.0
+daily_request_budget = 300
+person_daily_share = 0.5
+cache_ttl_seconds = 120
+terms = "ResDiary's terms restrict automated access; its Consumer API needs venue approval. dine-mcp reads only the public widget API, for a person checking a table themselves, at human pace; it never books."
+credit = "Endpoint shapes from matuspavliscak/resdiary-mcp (MIT)."
+
+[canary]
+ref = "Taisteal"
