@@ -2,8 +2,8 @@
 
 - Venue: ``GET /api-yoa/dining/venue_info?venue_url_key=<key>&widget_type=res_widget`` gives the time
   zone, party size limits and the booking window (``maxDaysOut``, inclusive of today). 404: no venue.
-- Availability: ``GET /api-yoa/availability/ng/widget/range`` answers whole days, at most 3 per
-  request. ``type == "book"`` with an access id is bookable; ``type == "request"`` is a request slot.
+- Availability: ``GET /api-yoa/availability/ng/widget/range`` answers whole days, 1 or 3 per
+  request (2 is rejected). ``type == "book"`` with an access id is bookable; ``type == "request"`` is a request slot.
   A closed day is an empty list. Beyond the window and above the party maximum the answer looks like
   "sold out" (request entries only), so both are decided from the venue settings before asking.
 - Link: ``/explore/<key>/reservations/create/search/?date&party_size&start_time``.
@@ -12,6 +12,7 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable
 from datetime import date, time
 from typing import Any
 
@@ -24,6 +25,14 @@ from .common import as_int, batches, json_of, money, parse_hhmm, plain, unambigu
 HOST = "www.sevenrooms.com"
 BASE = f"https://{HOST}"
 DAYS_PER_REQUEST = 3
+
+
+def range_batches(dates: Iterable[date]) -> list[list[date]]:
+    """Plan exact coverage using the widget's supported one- and three-day ranges."""
+    planned: list[list[date]] = []
+    for batch in batches(dates, DAYS_PER_REQUEST):
+        planned.extend([[day] for day in batch] if len(batch) == 2 else [batch])
+    return planned
 
 
 class SevenRooms:
@@ -87,7 +96,7 @@ class SevenRooms:
         )
 
     def cost(self, ref: ProviderVenueRef, window: Window) -> int:
-        return len(batches(window.dates, DAYS_PER_REQUEST))
+        return len(range_batches(window.dates))
 
     async def availability(self, venue: ProviderVenue, window: Window, person: str) -> Observation:
         tz = zone(venue.time_zone)
@@ -96,7 +105,7 @@ class SevenRooms:
         slots: list[Slot] = []
         checked: list[str] = []
         day_status: dict[str, VenueStatus] = {}
-        for batch in batches(window.dates, DAYS_PER_REQUEST):
+        for batch in range_batches(window.dates):
             response = await self._t().request(
                 "availability_range",
                 f"{BASE}/api-yoa/availability/ng/widget/range",

@@ -85,7 +85,7 @@ disabled and a fresh private state directory, for example:
 
 ```sh
 DINE_PLACES=none DINE_STATE_DIR=/tmp/dine-wheel-smoke \
-  uv run --offline --isolated --no-project --with ./dist/dine_mcp-0.2.4-py3-none-any.whl dine-mcp status
+  uv run --offline --isolated --no-project --with ./dist/dine_mcp-0.2.6-py3-none-any.whl dine-mcp status
 ```
 
 The `--offline` example needs cached dependency metadata/wheels; omit that flag for an initial

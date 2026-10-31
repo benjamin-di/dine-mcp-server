@@ -3,7 +3,7 @@
   "name": "io.github.benjamin-di/dine-mcp",
   "title": "Dine MCP",
   "description": "Restaurant table availability across SevenRooms, TableCheck and ResDiary. Read-only; never books.",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "repository": {
     "url": "https://github.com/benjamin-di/dine-mcp-server",
     "source": "github"
@@ -12,7 +12,7 @@
     {
       "registryType": "pypi",
       "identifier": "dine-mcp",
-      "version": "0.2.4",
+      "version": "0.2.6",
       "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"

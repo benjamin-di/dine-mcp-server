@@ -40,7 +40,7 @@ next is in [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ## Quick start
 
-**Release 0.2.4.** From a source checkout, run:
+**Release 0.2.6.** From a source checkout, run:
 
 ```sh
 uv sync --locked

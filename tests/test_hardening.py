@@ -108,6 +108,34 @@ async def test_omitted_date_is_unavailable_not_negative_observation(tmp_path):
     assert not result["coverage"]["dates_checked"] and result["observed_at"] is None
 
 
+async def test_sevenrooms_cached_middle_day_splits_remaining_pairs(tmp_path):
+    calls = []
+
+    def handler(request):
+        count = int(request.url.params["num_days"])
+        assert count in (1, 3)
+        first = datetime.fromisoformat(request.url.params["start_date"]).date()
+        calls.append((first, count))
+        calendar = {}
+        for n in range(count):
+            day = (first + timedelta(days=n)).isoformat()
+            calendar.update(available(day)["data"]["availability"])
+        return httpx.Response(200, json={"status": 200, "data": {"availability": calendar}})
+
+    app, venue = build(tmp_path, handler)
+    await app.service.check_availability("local", [venue], soon(4).isoformat())
+    result = (await app.service.check_availability("local", [venue], soon(2).isoformat(), date_to=soon(6).isoformat()))[
+        "results"
+    ][0]
+    assert calls == [(soon(n), 1) for n in (4, 2, 3, 5, 6)]
+    assert result["status"] == "ok"
+    assert not result["coverage"]["dates_not_checked"]
+    assert len(result["coverage"]["dates_checked"]) == len(result["slots"]) == 5
+    again = await app.service.check_availability("local", [venue], soon(2).isoformat(), date_to=soon(6).isoformat())
+    assert again["results"][0]["served_from"] == "cache"
+    assert len(calls) == 5
+
+
 @pytest.mark.parametrize("completed_days", [0, 3])
 async def test_sevenrooms_rejected_range_keeps_only_completed_coverage(tmp_path, completed_days):
     fixtures = Path(__file__).parent / "fixtures" / "sevenrooms"

@@ -153,6 +153,33 @@ async def test_sevenrooms_metadata_bad_request_does_not_prove_unknown_venue(tmp_
     assert raised.value.status is VenueStatus.UNAVAILABLE
 
 
+@pytest.mark.parametrize("offsets", [[0, 1], list(range(5)), list(range(7)), [0, 2, 3, 5, 6]])
+async def test_sevenrooms_plans_only_supported_range_sizes(tmp_path, offsets):
+    def answer(request):
+        count = int(request.url.params["num_days"])
+        assert count in (1, 3), "the widget rejects two-day ranges"
+        first = date.fromisoformat(request.url.params["start_date"])
+        return httpx.Response(
+            200,
+            json={"data": {"availability": {(first + timedelta(days=n)).isoformat(): [] for n in range(count)}}},
+        )
+
+    router = Router(
+        {
+            ("GET", "/api-yoa/dining/venue_info"): json_response("sevenrooms/venue_info.json"),
+            ("GET", "/api-yoa/availability/ng/widget/range"): answer,
+        }
+    )
+    provider = bound("sevenrooms", router, tmp_path)
+    venue = await provider.get_venue(ProviderVenueRef("sevenrooms", "examplegrill"), "alex")
+    asked = window([day(n) for n in offsets])
+    planned = provider.cost(venue.ref, asked)
+    observed = await provider.availability(venue, asked, "alex")
+    assert len(router.requests) - 1 == planned
+    assert observed.dates_checked == [day(n).isoformat() for n in offsets]
+    assert sum(int(r.url.params["num_days"]) for r in router.requests[1:]) == len(offsets)
+
+
 # --- TableCheck -----------------------------------------------------------------------------------------
 
 

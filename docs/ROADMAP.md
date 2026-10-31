@@ -1,6 +1,6 @@
 # Roadmap
 
-Updated for the 0.2.4 source fixes. This describes the current
+Updated for the 0.2.6 source fixes. This describes the current
 source and remaining qualification work. Scope remains **availability only**: no booking, holds,
 cancellation or watches.
 

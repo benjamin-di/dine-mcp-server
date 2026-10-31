@@ -4,6 +4,33 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and versions follow
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) over the tool surface.
 
+## [0.2.6] - 2026-10-31
+
+_Version 0.2.5 was not published after container qualification failed; this release includes its availability fix._
+
+### Fixed
+
+- Check SevenRooms two-day remainders and cache gaps with supported single-day requests and matching request budgets.
+
+### Upgrade
+
+- Action required: none.
+- Rollback: compatible with 0.2.4 and 0.2.5.
+
+## [0.2.5] - 2026-10-31
+
+_Not published: container qualification failed; use 0.2.6._
+
+### Fixed
+
+- Split SevenRooms two-day ranges into supported single-day requests, including remainders created by cached or closed dates.
+- Estimate request costs from the same range plan used for dispatch, preserving budgets and exact requested coverage.
+
+### Upgrade
+
+- Action required: none.
+- Rollback: compatible with 0.2.4.
+
 ## [0.2.4] - 2026-10-31
 
 ### Fixed
@@ -99,3 +126,7 @@ Initial availability-only release. Public distribution is pending.
   credential-free reads, SSRF protections and directory fallback; no JavaScript or crawling.
 
 [0.2.4]: https://github.com/benjamin-di/dine-mcp-server/releases/tag/v0.2.4
+
+[0.2.5]: https://github.com/benjamin-di/dine-mcp-server/releases/tag/v0.2.5
+
+[0.2.6]: https://github.com/benjamin-di/dine-mcp-server/releases/tag/v0.2.6
