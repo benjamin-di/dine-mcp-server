@@ -15,7 +15,7 @@ The operator can lower any provider to `listing` (links only) without a release.
 | Venue | `GET www.sevenrooms.com/api-yoa/dining/venue_info?venue_url_key=<key>&widget_type=res_widget`: time zone, country, party limits (`min_guests`, `max_guests`), booking window (`maxDaysOut`, counting today) |
 | Availability | `GET …/api-yoa/availability/ng/widget/range?venue&party_size&start_date&num_days≤3&halo_size_interval=100`: whole days, three per request |
 | Slots | `type: book` with an access id → bookable; `type: request` → request. Experience title and the card-required flag per slot |
-| Statuses | a closed day is `[]`; beyond the window and above the party maximum look like "sold out", so both come from the venue settings first; unknown venue 404 |
+| Statuses | a closed day is `[]`; beyond the window and above the party maximum look like "sold out", so both come from the venue settings first; venue-info 404 means unknown venue. Range rejections (including HTTP 400) mean `unavailable`, with unobserved dates left unchecked; they do not prove the venue is unknown or sold out. |
 | Link | `/explore/<key>/reservations/create/search/?date&party_size&start_time` (prefills all three) |
 | Cost | 1 request per 3 days; responses can be a few MB at busy venues |
 | Not read | prices (only in free text), seating area names, the hold and booking endpoints |

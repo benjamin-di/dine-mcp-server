@@ -1,6 +1,6 @@
 [project]
 name = "dine-mcp"
-version = "0.2.3"
+version = "0.2.4"
 description = "Restaurant table availability across booking systems (SevenRooms, TableCheck, ResDiary, …) as an MCP server"
 readme = "README.md"
 license = "Apache-2.0"

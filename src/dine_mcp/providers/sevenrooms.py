@@ -55,7 +55,7 @@ class SevenRooms:
             params={"venue_url_key": key, "widget_type": "res_widget"},
             headers={"Accept": "application/json"},
         )
-        if response.status_code in (400, 404):
+        if response.status_code == 404:
             raise ProviderError(VenueStatus.UNKNOWN_VENUE, f"venue_info {response.status_code}")
         if response.status_code != 200:
             raise ProviderError(VenueStatus.UNAVAILABLE, f"venue_info {response.status_code}")
@@ -113,8 +113,7 @@ class SevenRooms:
                 },
                 headers={"Accept": "application/json"},
             )
-            if response.status_code == 400:
-                raise ProviderError(VenueStatus.UNKNOWN_VENUE, "range 400")
+            # Query rejection after resolution is not evidence of an unknown venue.
             body = json_of(response) if response.status_code == 200 else None
             availability = ((body or {}).get("data") or {}).get("availability")
             if not isinstance(availability, dict) or (body or {}).get("status") not in (200, None):

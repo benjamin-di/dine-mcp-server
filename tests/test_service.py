@@ -162,6 +162,25 @@ async def test_provider_pushback_is_a_venue_status_not_a_call_error(make_app, se
     assert result["results"][0]["coverage"]["dates_not_checked"]
 
 
+@pytest.mark.parametrize("status", [VenueStatus.UNAVAILABLE, VenueStatus.UNKNOWN_VENUE])
+async def test_provider_failure_note_does_not_claim_venue_disappeared(make_app, sevenrooms, status):
+    sevenrooms.fail = status
+    app = make_app(None, {"sevenrooms": sevenrooms})
+    venue_id = await _amber(app)
+    result = (await app.service.check_availability("alex", [venue_id], soon(2).isoformat()))["results"][0]
+    assert result["status"] == status.value
+    assert "no longer" not in result["note"]
+    assert result["note"] == (
+        "The provider request failed; availability could not be verified."
+        if status is VenueStatus.UNAVAILABLE
+        else "The provider did not recognize this venue reference."
+    )
+    assert not result["coverage"]["dates_checked"] and not result["slots"]
+    assert result["coverage"]["dates_not_checked"] == [soon(2).isoformat()]
+    assert result["observed_at"] is None and result["served_from"] is None
+    assert result["booking_link"]
+
+
 async def test_too_broad_is_refused_before_any_request(make_app, sevenrooms):
     sevenrooms.calendar = False
     app = make_app(None, {"sevenrooms": sevenrooms})

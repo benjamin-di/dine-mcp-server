@@ -40,7 +40,7 @@ next is in [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ## Quick start
 
-**Release 0.2.3.** From a source checkout, run:
+**Release 0.2.4.** From a source checkout, run:
 
 ```sh
 uv sync --locked
@@ -77,6 +77,11 @@ uvx dine-mcp check v_abc123def456 --date 2026-11-06 --from-time 18:00 --to-time 
 | `dine_status(check=false)` | Providers, budgets and pauses. Optional paced canaries share a durable 15-minute cooldown. |
 
 All tools are read-only. Every result also comes as short text for clients that show only text.
+
+To check a restaurant, resolve it with `dine_find_venue`, then call `dine_check_availability`.
+Ask for missing dates and diner count first, and state the time window used (the API defaults
+to 17:00–22:30). `dine_status` diagnoses the service; it does not check a restaurant's tables.
+Failed requests and unchecked dates mean unknown availability, never evidence that it is sold out.
 
 **Statuses** (per venue and channel): `ok`, `none_available`, `not_yet_open` (the dates are not
 released yet; `opens_at` when known), `party_too_small` (with `min_party`) or

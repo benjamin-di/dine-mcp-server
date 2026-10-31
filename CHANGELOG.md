@@ -4,7 +4,18 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and versions follow
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) over the tool surface.
 
-## [Unreleased]
+## [0.2.4] - 2026-10-31
+
+### Fixed
+
+- Report SevenRooms request rejections as `unavailable`, preserving unchecked dates and any earlier completed observations.
+- Describe provider failures without claiming a venue disappeared.
+- Ask for missing dates and diner count in `dine_check_availability` guidance and direct `dine_status` callers to the restaurant availability tools.
+
+### Upgrade
+
+- Action required: none.
+- Rollback: compatible with 0.2.3.
 
 ## [0.2.3]
 
@@ -86,3 +97,5 @@ Initial availability-only release. Public distribution is pending.
 - Packaged-container qualification using temporary images and isolated stdio/HTTP runtimes.
 - Opt-in source-owned website widget discovery, with expiring provisional channels, bounded
   credential-free reads, SSRF protections and directory fallback; no JavaScript or crawling.
+
+[0.2.4]: https://github.com/benjamin-di/dine-mcp-server/releases/tag/v0.2.4

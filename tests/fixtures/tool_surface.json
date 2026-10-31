@@ -205,7 +205,7 @@
    "openWorldHint": true,
    "readOnlyHint": true
   },
-  "description": "Table availability for venues over dates, a time window and a party size. One result per\nvenue and channel: {venue_id, venue_name, channel, status, time_zone, slots [{start, kind,\narea, experience, price, requires_card, booking_link}], coverage {dates_checked,\ndates_not_checked}, observed_at, served_from, booking_link, opens_at, min_party, max_party, contact,\nnote}. status: ok, none_available, not_yet_open (see opens_at), party_too_small, party_too_large, closed,\ncontact_only, not_connected, blocked, rate_limited, unavailable, unsupported, unknown_venue,\nskipped_deadline. Large requests are refused with too_broad: narrow them.",
+  "description": "Table availability for venues over dates, a time window and a party size. Ask for missing\ndates and diner count before calling; state the time window used. One result per\nvenue and channel: {venue_id, venue_name, channel, status, time_zone, slots [{start, kind,\narea, experience, price, requires_card, booking_link}], coverage {dates_checked,\ndates_not_checked}, observed_at, served_from, booking_link, opens_at, min_party, max_party, contact,\nnote}. status: ok, none_available, not_yet_open (see opens_at), party_too_small, party_too_large, closed,\ncontact_only, not_connected, blocked, rate_limited, unavailable, unsupported, unknown_venue,\nskipped_deadline. Large requests are refused with too_broad: narrow them.",
   "inputSchema": {
    "additionalProperties": false,
    "properties": {
@@ -338,7 +338,7 @@
    "openWorldHint": true,
    "readOnlyHint": true
   },
-  "description": "Version, each provider's mode, maturity, whether it is on, today's request budget and\nany pause after provider pushback. Default is offline; check=true runs paced, budgeted\npublic-widget canaries with a 15-minute cooldown. Health never contacts a provider.",
+  "description": "Version, each provider's mode, maturity, whether it is on, today's request budget and\nany pause after provider pushback. Default is offline; check=true runs paced, budgeted\npublic-widget canaries with a 15-minute cooldown. For a restaurant's availability, use\ndine_find_venue then dine_check_availability. Health never contacts a provider.",
   "inputSchema": {
    "additionalProperties": false,
    "properties": {

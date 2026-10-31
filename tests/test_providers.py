@@ -117,17 +117,40 @@ async def test_sevenrooms(tmp_path):
     assert provider.cost(venue.ref, window([day(0), day(2), day(4)])) == 3  # gaps break batches
 
 
-async def test_sevenrooms_unknown_and_errors(tmp_path):
+async def test_sevenrooms_unknown_venue(tmp_path):
     router = Router(
         {
             ("GET", "/api-yoa/dining/venue_info"): json_response("sevenrooms/venue_info_unknown.json", 404),
-            ("GET", "/api-yoa/availability/ng/widget/range"): json_response("sevenrooms/range_error.json", 400),
         }
     )
     provider = bound("sevenrooms", router, tmp_path)
     with pytest.raises(ProviderError) as raised:
         await provider.get_venue(ProviderVenueRef("sevenrooms", "nope"), "alex")
     assert raised.value.status is VenueStatus.UNKNOWN_VENUE
+
+
+@pytest.mark.parametrize("status", [400, 404, 422, 200])
+async def test_sevenrooms_range_rejection_is_not_an_unknown_venue(tmp_path, status):
+    router = Router(
+        {
+            ("GET", "/api-yoa/dining/venue_info"): json_response("sevenrooms/venue_info.json"),
+            ("GET", "/api-yoa/availability/ng/widget/range"): json_response("sevenrooms/range_error.json", status),
+        }
+    )
+    provider = bound("sevenrooms", router, tmp_path)
+    venue = await provider.get_venue(ProviderVenueRef("sevenrooms", "examplegrill"), "alex")
+    with pytest.raises(ProviderError) as raised:
+        await provider.availability(venue, window([day(0)]), "alex")
+    assert raised.value.status is VenueStatus.UNAVAILABLE
+    assert len(router.requests) == 2
+
+
+async def test_sevenrooms_metadata_bad_request_does_not_prove_unknown_venue(tmp_path):
+    router = Router({("GET", "/api-yoa/dining/venue_info"): json_response("sevenrooms/range_error.json", 400)})
+    provider = bound("sevenrooms", router, tmp_path)
+    with pytest.raises(ProviderError) as raised:
+        await provider.get_venue(ProviderVenueRef("sevenrooms", "examplegrill"), "alex")
+    assert raised.value.status is VenueStatus.UNAVAILABLE
 
 
 # --- TableCheck -----------------------------------------------------------------------------------------

@@ -502,9 +502,10 @@ class Checker:
             )
             self.serve_stale(task, out)
         elif exc.status is VenueStatus.UNAVAILABLE:
+            out.note = "The provider request failed; availability could not be verified."
             self.serve_stale(task, out, max_age=float(task.effective.definition.cache_ttl_seconds))
         elif exc.status is VenueStatus.UNKNOWN_VENUE:
-            out.note = "The provider no longer knows this venue."
+            out.note = "The provider did not recognize this venue reference."
         log.info(
             "provider status",
             extra={"provider": task.ref.provider, "status": exc.status.value, "detail": exc.log_detail},

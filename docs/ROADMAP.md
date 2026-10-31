@@ -1,7 +1,7 @@
 # Roadmap
 
-Updated 2026-10-30 after a source and regression audit. This describes the current
-source, including fixes after 0.2.0, rather than a published release. Scope remains **availability only**: no booking, holds,
+Updated for the 0.2.4 source fixes. This describes the current
+source and remaining qualification work. Scope remains **availability only**: no booking, holds,
 cancellation or watches.
 
 ## Built in current source
@@ -12,6 +12,9 @@ cancellation or watches.
   detection, curated channels and stable venue ids/aliases.
 - Coverage-aware cache reuse, including separate TableCheck time windows and honest missing
   coverage. Completed batches and partial positive slots survive later errors and deadlines.
+- SevenRooms range rejections remain `unavailable`, preserving completed observations without
+  treating unchecked dates as sold out or a resolved venue as unknown. Assistant guidance asks
+  for missing dates/diner count and uses status for diagnostics rather than restaurant searches.
 - One deadline across lookup, planning and checking; estimated and actual 20-request caps;
   individually paced/charged redirects, restart-safe budgets/breakers and bounded Retry-After.
 - Strict configurable HTTP Host/Origin protection, inbound and streamed response limits, and
@@ -24,7 +27,7 @@ cancellation or watches.
   and scheduler-ready drift-report entry point. No live schedule is installed by this source.
 - Conservative closed-day shortcuts from dated place hours, generated provider matrix, hardened
   Compose example and OCI version metadata.
-- Region definitions for HK, SG, JP, GB, AU and KR.
+- Bundled public region definitions for SG, JP, GB, AU and KR.
 - Targeted model scenarios and deterministic fixtures for non-Latin names, cross-country
   ambiguity, messaging-only contact, partial pushback and overnight time zones. Ambiguous venue
   choices require clarification; a person's location alone does not select a venue country.
@@ -46,13 +49,14 @@ cancellation or watches.
   28/30 with two false positives); both affected cases pass three fresh runs each. Eight held-out
   tasks stay unchanged. Earlier 24/24 and three-run 72/72 evidence remain separate.
 
-## Before the first public release: external qualification and delivery
+## Artifact and live qualification
 
-The audited application-code fixes are implemented in source. Remaining acceptance needs a supported
-operator/runtime environment: exact-source CI, a release containing the latest fixes and clean install/pull,
-provider canaries, remote route/authentication checks, deployment and public publication.
-None is implied by passing local checks. Deployment and publication are separate authorized
-operations; a local wheel, Compose validation or synthetic HTTP listener is not a rollout.
+The earlier audited fixes are included in the published 0.2.3 artifacts. Public release tests,
+fresh package installs, anonymous image provenance checks for both architectures and an
+offline amd64 image smoke passed. These checks do not qualify every provider, region or
+optional feature. Provider canaries and remote authentication/runtime acceptance need a
+supported operator environment and retain their own scope; local checks alone establish
+neither a rollout nor live provider compatibility.
 
 The conformance automation deliberately selects generic scenarios applicable to a four-tool
 stateless JSON server. Upstream's named demo-tool, resource, elicitation and stateful SSE scenarios

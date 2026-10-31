@@ -8,6 +8,7 @@ import json
 import socket
 import time
 from datetime import datetime, timedelta
+from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import httpx
@@ -105,6 +106,73 @@ async def test_omitted_date_is_unavailable_not_negative_observation(tmp_path):
     result = (await app.service.check_availability("local", [venue], soon(2).isoformat()))["results"][0]
     assert result["status"] == "unavailable"
     assert not result["coverage"]["dates_checked"] and result["observed_at"] is None
+
+
+@pytest.mark.parametrize("completed_days", [0, 3])
+async def test_sevenrooms_rejected_range_keeps_only_completed_coverage(tmp_path, completed_days):
+    fixtures = Path(__file__).parent / "fixtures" / "sevenrooms"
+    calls = []
+
+    def handler(request):
+        calls.append(request)
+        if request.url.path == "/api-yoa/dining/venue_info":
+            return httpx.Response(200, json=json.loads((fixtures / "venue_info.json").read_text()))
+        assert request.url.path == "/api-yoa/availability/ng/widget/range"
+        if completed_days and len(calls) == 2:
+            first = datetime.fromisoformat(request.url.params["start_date"]).date()
+            data = {}
+            for offset in range(completed_days):
+                data.update(available((first + timedelta(days=offset)).isoformat())["data"]["availability"])
+            return httpx.Response(200, json={"data": {"availability": data}})
+        return httpx.Response(400, json=json.loads((fixtures / "range_error.json").read_text()))
+
+    app = build_app(
+        {"DINE_STATE_DIR": str(tmp_path)},
+        client=httpx.AsyncClient(transport=httpx.MockTransport(handler)),
+        place_source=None,
+    )
+    app.transports["sevenrooms"]._sleep = no_sleep
+    try:
+        async with Client(create_server(app, stdio=True)) as client:
+            found = await client.call_tool(
+                "dine_find_venue", {"url": "https://www.sevenrooms.com/reservations/examplegrill"}
+            )
+            venue = found.structured_content["venues"][0]["venue_id"]
+            response = await client.call_tool(
+                "dine_check_availability",
+                {"venue_ids": [venue], "date_from": soon(2).isoformat(), "date_to": soon(8).isoformat()},
+            )
+        result = response.structured_content["results"][0]
+        assert result["status"] == "unavailable"
+        assert result["coverage"]["dates_checked"] == [soon(n).isoformat() for n in range(2, 2 + completed_days)]
+        assert result["coverage"]["dates_not_checked"] == [soon(n).isoformat() for n in range(2 + completed_days, 9)]
+        assert len(result["slots"]) == len(app.service.cache) == completed_days
+        assert len(calls) == (3 if completed_days else 2)
+        assert "availability could not be verified" in response.content[0].text
+        assert "no longer" not in response.content[0].text and "invalid num_days" not in response.content[0].text
+        assert result["booking_link"]["url"].startswith("https://www.sevenrooms.com/explore/examplegrill/")
+        if not completed_days:
+            assert result["observed_at"] is None and result["served_from"] is None
+        else:
+            assert result["observed_at"] and result["served_from"] == "cache"
+    finally:
+        await app.aclose()
+
+
+async def test_sevenrooms_valid_empty_result_remains_observed(tmp_path):
+    day = soon(2).isoformat()
+    app, venue = build(
+        tmp_path,
+        lambda request: httpx.Response(200, json={"data": {"availability": {day: [{"times": []}]}}}),
+    )
+    try:
+        result = (await app.service.check_availability("local", [venue], day))["results"][0]
+        assert result["status"] == "none_available" and not result["slots"]
+        assert result["coverage"]["dates_checked"] == [day] and not result["coverage"]["dates_not_checked"]
+        assert result["observed_at"] and result["served_from"] == "live"
+        assert len(app.service.cache) == 1
+    finally:
+        await app.aclose()
 
 
 @pytest.mark.parametrize("cancel", [False, True])

@@ -1,6 +1,6 @@
 services:
   dine:
-    image: ${DINE_IMAGE:-ghcr.io/benjamin-di/dine-mcp-server:0.2.3}
+    image: ${DINE_IMAGE:-ghcr.io/benjamin-di/dine-mcp-server:0.2.4}
     restart: unless-stopped
     user: "1000:1000"
     read_only: true

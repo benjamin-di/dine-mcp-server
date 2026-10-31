@@ -73,12 +73,19 @@ qualification has not been repeated here; this workstation has no Docker executa
 
 ## Standalone artifacts
 
+Release 0.2.3 was built from its sanitized public tag. Anonymous PyPI wheel/sdist downloads
+matched the accepted build hashes, and fresh wheel and lock-free PyPI installations passed
+offline stdio discovery/status and packaged App resource/notices checks. Both image architectures'
+source/version/revision labels were verified anonymously; a native amd64 pull passed offline
+stdio initialization and missing-bearer HTTP refusal. Arm64 runtime execution and real App-host
+acceptance are not established by these checks.
+
 `uv build --wheel` builds a candidate. Smoke-test it in an isolated environment with places
 disabled and a fresh private state directory, for example:
 
 ```sh
 DINE_PLACES=none DINE_STATE_DIR=/tmp/dine-wheel-smoke \
-  uv run --offline --isolated --no-project --with ./dist/dine_mcp-0.2.2-py3-none-any.whl dine-mcp status
+  uv run --offline --isolated --no-project --with ./dist/dine_mcp-0.2.4-py3-none-any.whl dine-mcp status
 ```
 
 The `--offline` example needs cached dependency metadata/wheels; omit that flag for an initial
@@ -100,6 +107,11 @@ for pinned base images and packages. It never runs Compose `up` or pushes an ima
 This does not verify registry provenance, a clean published-image pull or a production route.
 
 ## Operator-only provider checks
+
+Offline SevenRooms regressions resolve a synthetic venue before rejecting its range request.
+They check the MCP text and structured result, unchecked dates, no false negative cache entries,
+and retention of an earlier successful batch. HTTP 400 alone does not prove an unknown venue;
+the exact upstream reason for a live rejection requires separate evidence.
 
 No default test contacts a provider. The live tier is export-ignored and double-gated:
 

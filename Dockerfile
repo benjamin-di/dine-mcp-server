@@ -15,7 +15,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # container with a read-only root and a /state volume or tmpfs owned by uid 1000.
 RUN mkdir -p /state && chown 1000:1000 /state
 
-ARG VERSION=0.2.3
+ARG VERSION=0.2.4
 ARG VCS_REF=unknown
 ARG BUILD_DATE=unknown
 ARG SOURCE_URL=unknown
