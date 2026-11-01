@@ -10,7 +10,7 @@ requires-python = ">=3.12"
 keywords = ["mcp", "restaurant", "reservations", "availability", "sevenrooms", "tablecheck", "resdiary"]
 dependencies = [
     # FastMCP 4 (MCP SDK 2): stateless JSON over streamable HTTP, or stdio. Same pin as the place source.
-    "fastmcp==4.0.10",
+    "fastmcp==4.1.4",
     "httpx>=0.27,<0.29",
     "filelock>=4.2.1,<5",
     # Venue identity and booking links from Google Maps, through maps-mcp's library interface.
