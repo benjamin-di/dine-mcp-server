@@ -4,6 +4,94 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and versions follow
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) over the tool surface.
 
+## [0.2.10] - 2026-11-02
+
+_Security: first public release carrying the 0.2.9 patched dependencies and fixes; 0.2.7 to 0.2.9 were not published publicly._
+
+### Security
+
+- Publish the 0.2.9 requirement on FastMCP 4.1.4 and Maps 0.6.2 in the public package, resolving component authorization and OAuth issuer-binding advisories for public installations.
+
+### Changed
+
+- Describe only implementation and public qualification work in the roadmap.
+
+### Upgrade
+
+- Action required: upgrade to 0.2.10 for patched dependencies; no configuration migration.
+- Rollback: compatible with 0.2.9; rolling back to 0.2.6 restores its affected FastMCP dependency.
+
+## [0.2.9] - 2026-10-31
+
+_Security: patched dependencies and availability fixes; 0.2.7 and 0.2.8 were not published publicly._
+
+### Security
+
+- Publish dependency security floors in wheel and source-distribution metadata so unlocked installations retain the patched minimum versions.
+- Require FastMCP 4.1.4 and Maps 0.6.2 to resolve component authorization and OAuth issuer-binding advisories.
+
+### Changed
+
+- Publish the tested wheel and source distribution once and require the complete anonymous PyPI file set to match before MCP Registry publication.
+
+### Fixed
+
+- Count expired venue metadata in request estimates even when the availability calendar is cached, refusing over-budget calls before dispatch.
+- Retain cached observations when a deadline interrupts venue metadata, queued checks or planning.
+- Preserve provider caveats for partial and empty observations, including cached fallback after pushback.
+- Preserve TableCheck timestamp precision instead of rounding slots into an exact-minute search.
+
+### Upgrade
+
+- Action required: upgrade to 0.2.9 for patched dependencies; no configuration migration.
+- Rollback: compatible with 0.2.8; rolling back to 0.2.6 restores its affected FastMCP dependency.
+
+## [0.2.8] - 2026-10-31
+
+_Not published publicly: superseded by 0.2.9 before delivery._
+
+### Security
+
+- Require FastMCP 4.1.4 and Maps 0.6.2 to resolve component authorization and OAuth issuer-binding advisories.
+
+### Changed
+
+- Publish the tested wheel and source distribution once and require the complete anonymous PyPI file set to match before MCP Registry publication.
+
+### Fixed
+
+- Retain cached observations when a deadline interrupts venue metadata, queued checks or planning.
+- Preserve provider caveats for partial and empty observations, including cached fallback after pushback.
+- Preserve TableCheck timestamp precision instead of rounding slots into an exact-minute search.
+
+### Upgrade
+
+- Action required: upgrade to 0.2.8 for patched dependencies; no configuration migration.
+- Rollback: data-compatible with 0.2.6, but restores its affected FastMCP dependency.
+
+## [0.2.7] - 2026-10-31
+
+_Not published publicly: export validation failed; use 0.2.8._
+
+### Security
+
+- Require FastMCP 4.1.4 and Maps 0.6.2 to resolve component authorization and OAuth issuer-binding advisories.
+
+### Changed
+
+- Publish the tested wheel and source distribution once and require the complete anonymous PyPI file set to match before MCP Registry publication.
+
+### Fixed
+
+- Retain cached observations when a deadline interrupts venue metadata, queued checks or planning.
+- Preserve provider caveats for partial and empty observations, including cached fallback after pushback.
+- Preserve TableCheck timestamp precision instead of rounding slots into an exact-minute search.
+
+### Upgrade
+
+- Action required: upgrade to 0.2.7 for patched dependencies; no configuration migration.
+- Rollback: data-compatible with 0.2.6, but restores its affected FastMCP dependency.
+
 ## [0.2.6] - 2026-10-31
 
 _Version 0.2.5 was not published after container qualification failed; this release includes its availability fix._
@@ -130,3 +218,8 @@ Initial availability-only release. Public distribution is pending.
 [0.2.5]: https://github.com/benjamin-di/dine-mcp-server/releases/tag/v0.2.5
 
 [0.2.6]: https://github.com/benjamin-di/dine-mcp-server/releases/tag/v0.2.6
+
+[0.2.7]: https://github.com/benjamin-di/dine-mcp-server/releases/tag/v0.2.7
+
+[0.2.9]: https://github.com/benjamin-di/dine-mcp-server/releases/tag/v0.2.9
+[0.2.8]: https://github.com/benjamin-di/dine-mcp-server/releases/tag/v0.2.8

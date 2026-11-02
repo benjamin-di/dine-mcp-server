@@ -34,6 +34,10 @@ printf 'Evidence: %s\n' "$invocation"
 .venv/bin/mypy
 make ui-check
 .venv/bin/python scripts/provider-matrix.py --check
+.venv/bin/python scripts/surface.py check
+if [ -d private ]; then
+    .venv/bin/python -m unittest discover -s private -p 'test_*.py'
+fi
 # The image installs requirements-runtime.lock; it must be exactly uv.lock's runtime set.
 uv export --frozen --no-dev --no-emit-project --no-header --quiet -o "$invocation/requirements-runtime.lock"
 if ! diff -u requirements-runtime.lock "$invocation/requirements-runtime.lock"; then

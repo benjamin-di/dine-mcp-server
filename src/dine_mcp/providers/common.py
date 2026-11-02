@@ -52,7 +52,7 @@ def unambiguous_local(day: date, at: time, tz: tzinfo) -> str | None:
         return None
     if first.astimezone(UTC).astimezone(tz).replace(tzinfo=None) != first.replace(tzinfo=None):
         return None
-    return first.isoformat(timespec="minutes")
+    return first.isoformat(timespec="auto" if first.second or first.microsecond else "minutes")
 
 
 def parse_hhmm(text: str) -> time | None:

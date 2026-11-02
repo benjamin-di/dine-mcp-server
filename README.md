@@ -40,7 +40,8 @@ next is in [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ## Quick start
 
-**Release 0.2.6.** From a source checkout, run:
+**Release: 0.2.10.** See the [changelog](CHANGELOG.md#0210---2026-11-02) for its
+security update and availability fixes. From a source checkout, run:
 
 ```sh
 uv sync --locked
@@ -104,15 +105,16 @@ Progress notifications are supported over stdio; stateless JSON HTTP returns the
 ## Running a server
 
 A hardened [Compose example](compose.yml) provides a read-only root, dropped capabilities and a
-private state volume. Set `DINE_IMAGE` to a locally built image until the first image is published.
+private state volume. Set `DINE_IMAGE` to a verified immutable image digest for deployment.
 Configure the HTTP Host/Origin allowlists for your proxy before accepting remote clients.
 
-Before an image is published, use `uv run dine-mcp --transport http` from the source checkout
-with the environment below. After the first image release:
+Run `uv run dine-mcp --transport http` from a source checkout, or set `DINE_IMAGE`
+to the verified immutable digest of the 0.2.10 image before starting the container:
 
 ```sh
 docker run -d -p 127.0.0.1:8000:8000 -v dine-state:/state \
-  -e MCP_BEARER_TOKEN="$(openssl rand -hex 32)" ghcr.io/benjamin-di/dine-mcp-server:latest
+  -e MCP_BEARER_TOKEN="$(openssl rand -hex 32)" \
+  "${DINE_IMAGE:?set a verified immutable image digest}"
 ```
 
 The MCP endpoint is `/mcp` (streamable HTTP, stateless JSON); `/health` is open. Who is calling
@@ -213,3 +215,12 @@ Clients without Apps continue to receive the text and structured result. The opt
 Development needs Node 22+ for `make ui` (rebuild) and `make ui-check` (locked dependencies,
 reproducible bundle/notices and offline rendering/SDK tests). Python installations need no Node.
 See [roadmap](docs/ROADMAP.md) for the remaining provider and connection prerequisites.
+
+The generated [interface reference](docs/reference.md) records complete MCP discovery
+(including the optional App profile) and CLI parser declarations. Run
+`python scripts/surface.py update` after a deliberate interface change and review
+`surface.json` with the reference diff. `make check` refuses missing or stale
+baselines. Environment and configuration coverage is explicitly partial while
+those declarations remain distributed across the loaders; this reference does
+not replace the configuration guidance above. Image smoke compares the installed
+entry point's complete discovery schemas and synthetic success/error behavior.

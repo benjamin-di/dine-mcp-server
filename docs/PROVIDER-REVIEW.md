@@ -22,3 +22,36 @@ Fixtures are independently invented and contain no real accounts, seats, browser
 provider payloads. Every admitted host/method/path is recorded in the adapter's `operations` and
 validated by the shared transport and safety suite. Static endpoint evidence never sets a live
 verification date. See [provider behaviour](PROVIDERS.md) and [roadmap](ROADMAP.md).
+
+## Follow-up contract review (2026-10-31)
+
+Additional static research did not qualify another exact-inventory adapter. No availability,
+account, holding, booking or payment request was dispatched.
+
+- **CatchTable:** the official web build `20261029200325/assets/bootstrap.js`
+  (SHA256 `8bdce295a0d5d06bf2bb20b151225642d1546d08f691c65003dd9c7b2825d3c1`)
+  confirms `POST /api/reservation/v1/dining/time-slots`, but its current caller supplies
+  `encryptedParamString`, `tableSeqs` and `c1`–`c4`, with a `slotEncPublicKey` from a separate
+  key exchange. Results use `timeSlotMap` and `resp2`, with service-day rollover rules.
+  The older independent client's plain date/party body is insufficient evidence for the
+  current contract. Do not add that older request as a guest seat operation or imitate its
+  fingerprint fallback. The current profile GET is visible, but its stable account identity
+  and independent candidate validation still need review before any session is adopted.
+- **Omakase:** re-read the pinned public client's `internal/omakase/{client,model,parse}.go`.
+  Its local inventory is a restaurant catalogue; exact seats remain unknown. A single public
+  homepage request returned HTTP 403, so live research stopped. No authenticated seat or
+  stable provider-identity contract was established; Connections cannot claim support.
+- **OpenRice:** the public client `main.54fbe051.js`
+  (SHA256 `2f0d5cc030a962b8ad928384d735d6f0ec0f8390aa3dfec91a6a1073d20e08f6`)
+  names separate availability, picker and widget GETs. Route names alone do not establish
+  their effective host/prefix, request fields, response schema or guest authorization. The
+  manifest-selected booking chunk request returned HTTP 403 and research stopped. No API
+  operation was added from these incomplete declarations.
+- **Tablebooker:** its public homepage redirects to Zenchef's application page. This does not
+  prove that legacy Tablebooker venues have migrated or that a legacy widget can be queried
+  through Zenchef. Keep explicit channel identity and the existing link handoff.
+
+The implementation gate is an evidenced exact request/response contract, a current access
+and terms decision, and synthetic coverage. Signed-in adoption additionally needs a stable
+provider account identity and independent candidate verification. Endpoint names, successful
+login pages, cookies, catalogue/day summaries and booking holds do not meet those gates.

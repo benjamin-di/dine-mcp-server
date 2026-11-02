@@ -217,7 +217,9 @@ class Planner:
             if self.cache.get(self.key(task, query, day), ttl) is None:
                 task.fetch_dates.append(day)
         if not task.fetch_dates:
-            task.cost = 0
+            # Cached calendars still need metadata when its separate cache expired.
+            # Only an entirely closed query bypasses metadata in Checker.check.
+            task.cost = int(info is None and not all(day in task.closures for day in query.dates()))
             return
         window = Window(tuple(task.fetch_dates), query.time_from, query.time_to, query.party_size)
         task.cost = task.provider.cost(task.ref, window) + (0 if info else 1)
@@ -267,15 +269,15 @@ class Checker:
                 job.cancel()
             if pending:
                 await asyncio.gather(*pending, return_exceptions=True)
+            # The outer call deadline can cancel us while metadata is pending or before
+            # another venue starts. Retain existing observations on those paths too.
+            for task in tasks:
+                if task.result is None:
+                    task.result = self.expired(task)
         for job in done:
             error = job.exception()
             if error is not None:
                 raise error
-        for task in tasks:
-            if task.result is None:
-                task.result = self.base(task, VenueStatus.SKIPPED_DEADLINE)
-                task.result.dates_not_checked = [d.isoformat() for d in self.query.dates()]
-                task.result.note = "Not checked within the time limit; call again for this venue."
 
     def base(self, task: Task, status: VenueStatus) -> VenueResult:
         return VenueResult(
@@ -366,6 +368,7 @@ class Checker:
         missing = [d for d in bookable if self.planner.cache.get(self.planner.key(task, query, d), ttl) is None]
         observed_at = clock.time()
         served = "cache"
+        notes: list[str] = []
         if missing:
             window = Window(tuple(missing), query.time_from, query.time_to, query.party_size)
             published: set[str] = set()
@@ -402,10 +405,11 @@ class Checker:
             self.store_observation(
                 task, observation, [d for d in missing if d.isoformat() not in published], clock.time()
             )
+            if observation.note:
+                notes.append(observation.note)
             served = "live"
         slots: list[Slot] = []
         statuses: set[VenueStatus] = {VenueStatus.CLOSED} if closed else set()
-        notes: list[str] = []
         oldest = min([observed_at] + [task.closures[d] for d in closed])
         for day in bookable:
             entry = self.planner.cache.get(self.planner.key(task, query, day), ttl)
@@ -415,6 +419,8 @@ class Checker:
                 if partial is not None and not partial.complete:
                     oldest = min(oldest, partial.observed_at)
                     slots.extend(filter_slots(partial.slots, query))
+                    if partial.note:
+                        notes.append(partial.note)
                 continue
             oldest = min(oldest, entry.observed_at)
             result.dates_checked.append(day.isoformat())
@@ -482,6 +488,7 @@ class Checker:
         out = result or self.base(task, VenueStatus.SKIPPED_DEADLINE)
         out.status = VenueStatus.SKIPPED_DEADLINE
         out.dates_not_checked = [d.isoformat() for d in self.query.dates()]
+        out.note = "Not checked within the time limit; call again for this venue."
         self.serve_stale(task, out)
         return out
 
@@ -518,6 +525,7 @@ class Checker:
         closures = {d: at for d, at in task.closures.items() if d in self.query.dates()}
         oldest: float | None = min(closures.values()) if closures else None
         checked = [d.isoformat() for d in closures]
+        notes = [out.note] if out.note else []
         for day in self.query.dates():
             entry = self.planner.cache.stale(self.planner.key(task, self.query, day), max_age)
             if entry is None:
@@ -526,12 +534,16 @@ class Checker:
                 checked.append(day.isoformat())
             oldest = entry.observed_at if oldest is None else min(oldest, entry.observed_at)
             slots.extend(filter_slots(entry.slots, self.query))
+            if entry.note:
+                notes.append(entry.note)
         if oldest is not None:
             out.slots = sorted(slots, key=lambda s: s.start)
             out.dates_checked = checked
             out.dates_not_checked = [d for d in out.dates_not_checked if d not in checked]
             out.observed_at = iso(oldest)
             out.served_from = "cache"
+        if notes:
+            out.note = "; ".join(dict.fromkeys(notes))[:300]
 
 
 def listing_result(venue_id: str, name: str, channel: str, url: str | None, text: str | None) -> VenueResult:

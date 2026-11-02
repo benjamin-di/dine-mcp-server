@@ -61,6 +61,10 @@ availability. Partial time windows can retain positive slots without marking the
 Unexpected adapter errors remain per-venue failures; policy errors still fail the call explicitly.
 Missing-coverage warnings and provider caveats are retained together. TableCheck's unreleased-date
 caveat survives incremental publication and cache reuse; equal start/end times mean one local time.
+Cached observations also survive deadlines before metadata completes or before a queued check starts.
+Partial and empty-search caveats remain attached to the result, including fallback after pushback.
+TableCheck timestamps retain nonzero seconds and fractions; filtering never rounds a later slot
+into an exact-minute query. Minute-aligned timestamps retain their existing representation.
 
 Cache keys contain provider, venue reference, party size and local date. Windowed providers
 (TableCheck) also include the exact requested time window. Fresh reuse lasts two minutes; during

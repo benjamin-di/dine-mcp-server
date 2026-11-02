@@ -347,13 +347,9 @@ class DineService:
                 )
         for task in tasks:
             if task.result is None:
-                task.result = VenueResult(
-                    task.venue_id,
-                    task.venue_name,
-                    task.ref.provider,
-                    VenueStatus.SKIPPED_DEADLINE,
-                    dates_not_checked=[d.isoformat() for d in query.dates()],
-                )
+                # Planning another venue may have consumed the deadline before the
+                # checker started. Existing observations still belong in this result.
+                task.result = Checker(self.planner, person, query).expired(task)
         results.extend(task.result for task in tasks if task.result is not None)
         order = {venue_id: index for index, venue_id in enumerate(venue_ids)}
         results.sort(key=lambda r: order.get(r.venue_id, 99))

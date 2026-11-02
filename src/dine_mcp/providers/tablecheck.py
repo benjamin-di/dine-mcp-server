@@ -232,7 +232,8 @@ class TableCheck:
                 if start is None:
                     return False
             else:
-                start = at.astimezone(tz).isoformat(timespec="minutes")
+                at = at.astimezone(tz)
+                start = at.isoformat(timespec="auto" if at.second or at.microsecond else "minutes")
         except ValueError:
             return False
         if day is not None and start[:10] != day:

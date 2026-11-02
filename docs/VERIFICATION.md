@@ -73,19 +73,31 @@ qualification has not been repeated here; this workstation has no Docker executa
 
 ## Standalone artifacts
 
-Release 0.2.3 was built from its sanitized public tag. Anonymous PyPI wheel/sdist downloads
+Release 0.2.6 was built from its sanitized public tag. Anonymous PyPI wheel/sdist downloads
 matched the accepted build hashes, and fresh wheel and lock-free PyPI installations passed
 offline stdio discovery/status and packaged App resource/notices checks. Both image architectures'
 source/version/revision labels were verified anonymously; a native amd64 pull passed offline
 stdio initialization and missing-bearer HTTP refusal. Arm64 runtime execution and real App-host
 acceptance are not established by these checks.
 
+The post-0.2.6 source audit adds synthetic regressions for cached-result retention during
+metadata, queue and planning deadlines; partial and empty-search caveats through normal assembly
+and pushback fallback; and TableCheck second/fraction precision across naive and offset timestamps.
+These source checks do not update the published package or establish fresh live acceptance.
+
+The package regression builds wheel and source distributions offline and checks that both publish every security constraint as a runtime requirement. Locked source checks alone do not verify this packaging boundary.
+
+The subsequent planning audit covers a fresh cached calendar whose venue metadata has expired.
+Its metadata read counts toward the pre-dispatch request estimate; an over-budget combination
+is refused before any provider read. A cached calendar remains reusable after metadata refresh,
+and explicit closed-day shortcuts still need no provider requests.
+
 `uv build --wheel` builds a candidate. Smoke-test it in an isolated environment with places
 disabled and a fresh private state directory, for example:
 
 ```sh
 DINE_PLACES=none DINE_STATE_DIR=/tmp/dine-wheel-smoke \
-  uv run --offline --isolated --no-project --with ./dist/dine_mcp-0.2.6-py3-none-any.whl dine-mcp status
+  uv run --offline --isolated --no-project --with ./dist/dine_mcp-0.2.10-py3-none-any.whl dine-mcp status
 ```
 
 The `--offline` example needs cached dependency metadata/wheels; omit that flag for an initial

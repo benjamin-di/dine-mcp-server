@@ -27,10 +27,41 @@ jobs:
         with:
           persist-credentials: false
       - uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
+        with:
+          version: '0.13.5'
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '22'
       - run: make check
+      - name: Build and exercise the release distributions
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          version="$(python3 -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')"
+          [ "$TAG" = "v$version" ]
+          uv build --no-sources
+          uv venv "$RUNNER_TEMP/dine-wheel"
+          uv pip install --python "$RUNNER_TEMP/dine-wheel/bin/python" "dist/dine_mcp-$version-py3-none-any.whl"
+          EXPECTED_VERSION="$version" "$RUNNER_TEMP/dine-wheel/bin/python" -I - <<'PYTHON'
+          import os
+          from importlib import metadata, resources
+          import dine_mcp
+          assert dine_mcp.__version__ == os.environ["EXPECTED_VERSION"]
+          assert (resources.files("dine_mcp") / "ui/availability.html").read_bytes()
+          files = metadata.distribution("dine-mcp").files
+          assert any(str(path).endswith("/licenses/NOTICE") for path in files)
+          PYTHON
+          DINE_STATE_DIR="$RUNNER_TEMP/dine-wheel-state" "$RUNNER_TEMP/dine-wheel/bin/dine-mcp" status > "$RUNNER_TEMP/dine-status.json"
+          python3 -c 'import json,sys; assert json.load(open(sys.argv[1]))["version"] == sys.argv[2]' "$RUNNER_TEMP/dine-status.json" "$version"
+          cd dist
+          sha256sum *.whl *.tar.gz > SHA256SUMS
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: pypi-distributions
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 7
 
   publish:
     needs: test
@@ -46,13 +77,21 @@ jobs:
         with:
           persist-credentials: false
       - uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990 # v8.3.2
-      - name: Build
+        with:
+          version: '0.13.5'
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: pypi-distributions
+          path: dist
+      - name: Upload the tested bytes
         run: |
-          version="$(python3 -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')"
-          [ "${GITHUB_REF_NAME#v}" = "$version" ] || { echo "tag $GITHUB_REF_NAME is not version $version" >&2; exit 1; }
-          uv build
-      - name: Upload
-        run: uv publish --trusted-publishing always --check-url https://pypi.org/simple/
+          set -euo pipefail
+          (cd dist && sha256sum --check SHA256SUMS)
+          uv publish --trusted-publishing always --check-url https://pypi.org/simple/ dist/*.whl dist/*.tar.gz
+      - name: Verify anonymous package hashes before Registry publication
+        env:
+          TAG: ${{ github.ref_name }}
+        run: python3 scripts/verify-pypi.py --version "${TAG#v}"
 
   registry:
     needs: publish

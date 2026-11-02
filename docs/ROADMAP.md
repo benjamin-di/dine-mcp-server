@@ -1,7 +1,7 @@
 # Roadmap
 
-Updated for the 0.2.6 source fixes. This describes the current
-source and remaining qualification work. Scope remains **availability only**: no booking, holds,
+Updated for the 0.2.10 source. This describes implementation and remaining delivery
+qualification; source checks alone do not update deployed servers or published packages. Scope remains **availability only**: no booking, holds,
 cancellation or watches.
 
 ## Built in current source
@@ -45,18 +45,27 @@ cancellation or watches.
   contract as MCP. Signed-in guidance no longer refers to an unavailable connection tool.
 - Real subprocess stdio/TCP HTTP regressions; pinned Inspector and applicable generic conformance
   scenarios with an empty expected-failures baseline. See [verification](VERIFICATION.md).
+- Post-release audit fixes retain cached observations through metadata/queue/planning deadlines,
+  preserve partial-result caveats and avoid rounding TableCheck timestamps into exact-minute queries.
+- Request estimates include expired metadata even when calendar observations remain cached;
+  an entirely closed query still avoids provider metadata and calendar reads.
 - Expanded model eval: 30/30 recorded answers pass corrected development verifiers (originally
   28/30 with two false positives); both affected cases pass three fresh runs each. Eight held-out
   tasks stay unchanged. Earlier 24/24 and three-run 72/72 evidence remain separate.
 
 ## Artifact and live qualification
 
-The earlier audited fixes are included in the published 0.2.3 artifacts. Public release tests,
+Release 0.2.6 is published on GitHub, PyPI and the MCP Registry. Public release tests,
 fresh package installs, anonymous image provenance checks for both architectures and an
 offline amd64 image smoke passed. These checks do not qualify every provider, region or
 optional feature. Provider canaries and remote authentication/runtime acceptance need a
 supported operator environment and retain their own scope; local checks alone establish
 neither a rollout nor live provider compatibility.
+
+The 0.2.6 SevenRooms fix passed a bounded seven-date live check without unsupported two-day
+requests. That observation establishes the tested range behavior, not every venue or continued
+inventory availability. The post-release audit changes remain unreleased; prior artifact and
+live checks must not be presented as qualification of those changes.
 
 The conformance automation deliberately selects generic scenarios applicable to a four-tool
 stateless JSON server. Upstream's named demo-tool, resource, elicitation and stateful SSE scenarios
@@ -91,7 +100,19 @@ are not claimed as implemented. Future protocol/dependency changes require revie
 | Tabelog and CatchTable seat inventory | Discovery is implemented as listing only. Exact seats need separate reviewed status/coverage and authentication contracts; catalogue eligibility and day summaries are insufficient. International CatchTable is also a separate contract. |
 | Full Formitable coverage, offers and widget migrations | Exhaustive experience discovery, offer eligibility/prices and explicit migration identity. Bounded positive observations are already implemented; omitted experiences remain unknown. |
 | Further regions and Korean place identity | Add requested regions and a reviewed independent place-source integration when needed. CatchTable discovery is not general map identity. |
-| FastMCP security update | The current public Maps dependency pins FastMCP 4.0.10. A compatible public Maps release is needed to adopt the advisory's patched FastMCP floor (4.1.2); update both locks and repeat protocol/HTTP qualification together. Filelock is already patched. |
+
+The 0.2.10 source uses public Maps 0.6.2 and locked FastMCP/FastMCP-slim 4.1.4. Security floors are also published as package requirements for unlocked wheel and source installations.
+The public Maps dependency now permits the patched 4.1 series without private overrides.
+Both runtime locks and dependency-image assertions agree. Full source, stdio/HTTP Inspector
+and applicable conformance checks passed; release, deployment and public artifact acceptance
+remain separate delivery work.
+
+## Qualification and delivery work
+
+| Work | Remaining acceptance |
+|---|---|
+| Automatic PyPI publishing | Source builds wheel/sdist once, exercises a fresh wheel installation, transfers the tested bytes with hashes and requires the complete anonymous PyPI file set to match before Registry publication. Register the exact Trusted Publisher identity and qualify the protected tag workflow on a real release. Existing bootstrap uploads do not establish future automatic publishing. |
+| Optional providers and presentation | Current terms/permission and bounded live acceptance for experimental providers; real MCP App-host acceptance and arm64 image runtime acceptance. Offline fixtures, a synthetic App host and architecture metadata are separate evidence. |
 
 The experimental providers require current terms/permission review and live acceptance before
 operational enablement. Static endpoint research is recorded in [provider review](PROVIDER-REVIEW.md);

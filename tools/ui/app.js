@@ -1,6 +1,6 @@
 import { App, applyDocumentTheme } from '@modelcontextprotocol/ext-apps';
 import { render } from './render.js';
-const app = new App({ name: 'Dine availability', version: '0.2.6' });
+const app = new App({ name: 'Dine availability', version: '0.2.10' });
 let result = null;
 function draw() {
   render(document, result, url => app.openLink({ url }).catch(() => {

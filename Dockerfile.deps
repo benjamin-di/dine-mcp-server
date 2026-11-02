@@ -17,7 +17,7 @@ COPY requirements-runtime.lock /tmp/requirements-runtime.lock
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install --system --compile-bytecode --require-hashes -r /tmp/requirements-runtime.lock \
     && rm -f /tmp/requirements-runtime.lock \
-    && python -c 'import httpx, fastmcp, tzdata, maps_mcp; assert fastmcp.__version__ == "4.0.10"'
+    && python -c 'import httpx, fastmcp, tzdata, maps_mcp; assert fastmcp.__version__ == "4.1.4"'
 
 ARG DEPS_REF=unknown
 LABEL org.opencontainers.image.title="dine-mcp-deps" \

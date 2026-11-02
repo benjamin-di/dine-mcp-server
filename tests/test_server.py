@@ -13,7 +13,7 @@ from test_service import amber_place
 from dine_mcp.auth import AuthConfig
 from dine_mcp.server import create_server
 
-SNAPSHOT = Path(__file__).parent / "fixtures" / "tool_surface.json"
+SNAPSHOT = Path(__file__).parents[1] / "surface.json"
 SURFACE_BUDGET = 12_000  # bytes of serialised tools/list; raise only deliberately, recording why
 
 
@@ -40,10 +40,9 @@ async def test_tool_surface_matches_the_snapshot(app):
         assert tool.get("outputSchema", {}).get("type") == "object"
     surface = json.dumps(tools, sort_keys=True, ensure_ascii=False)
     assert len(surface.encode()) <= SURFACE_BUDGET, len(surface.encode())
-    if not SNAPSHOT.exists():  # first run writes it; review the diff like code
-        SNAPSHOT.parent.mkdir(parents=True, exist_ok=True)
-        SNAPSHOT.write_text(json.dumps(tools, indent=1, sort_keys=True, ensure_ascii=False) + "\n")
-    assert json.loads(SNAPSHOT.read_text()) == json.loads(surface), "tool surface changed: update the snapshot"
+    assert sorted(json.loads(SNAPSHOT.read_text())["tools"], key=lambda tool: tool["name"]) == sorted(
+        json.loads(surface), key=lambda tool: tool["name"]
+    ), "tool surface changed: run python scripts/surface.py update and review the diff"
 
 
 async def test_descriptions_carry_no_behavioural_instructions(app):

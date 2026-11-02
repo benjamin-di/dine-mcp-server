@@ -18,6 +18,8 @@ cleanup() {
 }
 trap cleanup EXIT
 export MCP_BEARER_TOKEN=synthetic-container-qualification-bearer-token
+export DINE_EXPECTED_PROVIDER_KEYS
+DINE_EXPECTED_PROVIDER_KEYS="$(python3 -c 'import json; s=json.load(open("surface.json")); print(json.dumps(next(v["keys"] for v in s["configuration"] if v["name"]=="providers")))')"
 # Configuration rendering never starts the Compose service or pulls its image.
 docker compose -f compose.yml config --quiet
 printf 'Building temporary dependency image\n'
@@ -34,7 +36,7 @@ docker build --progress=plain -f Dockerfile -t "$image" \
 [[ "$(docker image inspect -f '{{index .Config.Labels "org.opencontainers.image.version"}}' "$image")" == code-qualification ]]
 options=(--rm --network none --read-only --user 1000:1000 --cap-drop ALL \
     --security-opt no-new-privileges --tmpfs /state:uid=1000,gid=1000,mode=0700 \
-    --tmpfs /tmp:uid=1000,gid=1000,noexec,nosuid,size=32m -e DINE_PLACES=none)
+    --tmpfs /tmp:uid=1000,gid=1000,noexec,nosuid,size=32m -e DINE_PLACES=none -e DINE_EXPECTED_PROVIDER_KEYS)
 # HTTP must fail closed without a bearer.
 rc=0
 docker run "${options[@]}" "$image" >"$work/refusal.log" 2>&1 || rc=$?
@@ -42,6 +44,8 @@ docker run "${options[@]}" "$image" >"$work/refusal.log" 2>&1 || rc=$?
 # A real client launches the packaged entry point over stdio, without source mounts.
 docker run -i "${options[@]}" --entrypoint python "$image" - <<'PY'
 import asyncio
+import json
+import os
 from fastmcp import Client
 from fastmcp.client.transports import StdioTransport
 async def main():
@@ -51,15 +55,17 @@ async def main():
     )) as client:
         assert len(await client.list_tools()) == 4
         result = await client.call_tool("dine_status", {})
-        assert len(result.structured_content["providers"]) == 3
+        assert sorted(item["key"] for item in result.structured_content["providers"]) == json.loads(os.environ["DINE_EXPECTED_PROVIDER_KEYS"])
         assert result.structured_content["website_discovery"]["enabled"] is True
         assert result.structured_content["website_discovery"]["used_today"] == 0
 asyncio.run(main())
 PY
+timeout 120 bash scripts/smoke-contract.sh "$image"
 # Temporary HTTP fixture: no published ports, no external network, no shared state volume.
 docker run -d "${options[@]}" --name "$container" -e MCP_BEARER_TOKEN "$image" > /dev/null
 docker exec -i "$container" python - <<'PY'
 import os
+import json
 import time
 import httpx
 url = "http://127.0.0.1:8000"
@@ -79,7 +85,8 @@ with httpx.Client(timeout=2, trust_env=False) as client:
     headers["authorization"] = "Bearer " + os.environ["MCP_BEARER_TOKEN"]
     assert client.post(url + "/mcp", json=body, headers={**headers,"host":"untrusted.example"}).status_code == 403
     result = client.post(url + "/mcp", json=body, headers=headers)
-    assert result.status_code == 200 and len(result.json()["result"]["structuredContent"]["providers"]) == 3
+    assert result.status_code == 200
+    assert sorted(item["key"] for item in result.json()["result"]["structuredContent"]["providers"]) == json.loads(os.environ["DINE_EXPECTED_PROVIDER_KEYS"])
 print("Packaged HTTP authentication, authority validation and status passed")
 PY
 printf 'Container qualification passed for %s\n' "$SOURCE_REVISION"

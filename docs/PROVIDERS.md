@@ -17,7 +17,7 @@ The operator can lower any provider to `listing` (links only) without a release.
 | Slots | `type: book` with an access id → bookable; `type: request` → request. Experience title and the card-required flag per slot |
 | Statuses | a closed day is `[]`; beyond the window and above the party maximum look like "sold out", so both come from the venue settings first; venue-info 404 means unknown venue. Range rejections (including HTTP 400) mean `unavailable`, with unobserved dates left unchecked; they do not prove the venue is unknown or sold out. |
 | Link | `/explore/<key>/reservations/create/search/?date&party_size&start_time` (prefills all three) |
-| Cost | 1 request per 3 days; responses can be a few MB at busy venues |
+| Cost | 1 request per consecutive three-day batch or single day; a two-day remainder needs two requests. Responses can be a few MB at busy venues. |
 | Not read | prices (only in free text), seating area names, the hold and booking endpoints |
 
 ## TableCheck (`public`, beta)
@@ -27,7 +27,7 @@ The operator can lower any provider to `listing` (links only) without a release.
 | Venue ref | the slug in `tablecheck.com/[<locale>/]shops/<slug>/reserve` or `tablecheck.com/<locale>/<slug>/reserve…` |
 | Venue | `GET www.tablecheck.com/en/shops/<slug>/reserve` (the page works for every venue, including those outside TableCheck's marketplace such as Singapore): shop id, time zone, country, currency, party maximum. Unknown slugs redirect to `/en/not-found` |
 | Availability | `POST production.tablecheck.com/v2/hub/availability_calendar_v2 {shop_id, start_at, num_people}`: about two months of dates per request, but only the anchor time ±2 hours |
-| Slots | bookable only (the calendar has no request or waitlist slots); no course, area or card flag |
+| Slots | bookable only (the calendar has no request or waitlist slots); timestamps retain their precision and venue-local offset; no course, area or card flag |
 | Statuses | `closed_dates` → closed. The booking window is not published: dates not yet released look full, and results say so |
 | Link | `/en/shops/<slug>/reserve?start_date&num_people&start_time` (prefills all three) |
 | Cost | 1 request per 4 hours of time window (17:00–22:30 is 2) |
