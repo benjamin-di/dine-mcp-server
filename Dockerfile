@@ -21,18 +21,20 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 FROM ${DINE_MCP_DEPS_IMAGE}
 
 WORKDIR /app
+ARG VERSION
+ARG VCS_REF
 COPY pyproject.toml README.md LICENSE NOTICE ./
 COPY src ./src
+COPY scripts/embed-build-identity.py /tmp/embed-build-identity.py
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --system --compile-bytecode --no-deps . \
-    && rm -rf /app/src
+    python /tmp/embed-build-identity.py "$VERSION" "$VCS_REF" \
+    && uv pip install --system --compile-bytecode --no-deps . \
+    && rm -rf /app/src /tmp/embed-build-identity.py
 
 # /state (venues, budgets, breakers, the roster, Google's consent cookies) is the only writable path; run the
 # container with a read-only root and a /state volume or tmpfs owned by uid 1000.
 RUN mkdir -p /state && chown 1000:1000 /state
 
-ARG VERSION=0.2.10
-ARG VCS_REF=unknown
 ARG BUILD_DATE=unknown
 ARG SOURCE_URL=unknown
 LABEL org.opencontainers.image.title="dine-mcp" \

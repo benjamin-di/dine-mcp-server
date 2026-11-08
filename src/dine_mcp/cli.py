@@ -20,7 +20,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-from . import __version__
+from . import __version__, logs
 
 COMMANDS = ("find", "check", "status", "health", "people", "users", "overrides")
 
@@ -83,10 +83,11 @@ def main(argv: list[str] | None = None) -> None:
         serve(args.transport, args.host, args.port)
         return
     args = _command_parser().parse_args(argv)
+    logs.setup("dine")
     try:
         code = run(args)
     except Exception as exc:  # operator-facing: name the problem, no traceback
-        print(f"dine-mcp: {type(exc).__name__}: {exc}", file=sys.stderr)
+        logs.diagnostic(f"dine-mcp: {type(exc).__name__}: {exc}")
         code = 1
     raise SystemExit(code)
 
@@ -125,7 +126,7 @@ def run(args: argparse.Namespace) -> int:
                 print("\n".join(app.store.people()))
                 return 0
             if not args.person:
-                print("dine-mcp: give the person id", file=sys.stderr)
+                logs.diagnostic("dine-mcp: give the person id")
                 return 2
             if args.action == "add":
                 print("added" if app.store.add_person(args.person, args.name) else "already on the roster")

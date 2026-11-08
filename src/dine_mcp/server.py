@@ -9,7 +9,6 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
-import sys
 from collections.abc import Awaitable
 from contextlib import asynccontextmanager, suppress
 from importlib import resources
@@ -28,12 +27,13 @@ from pydantic import ValidationError as PydanticValidationError
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from . import __version__, logs, text
+from . import logs, text
 from .auth import AuthConfig, AuthError, Verifier, person_for
 from .composition import App, ConfigError, build_app
 from .controls import PROGRESS, attribute
 from .errors import AGENT_INPUT_CODES, CODES, DineError
 from .http_boundary import DineMCP
+from .identity import BUILD, render_app
 from .service import MAX_VENUES
 
 log = logging.getLogger("dine")
@@ -149,7 +149,7 @@ def create_server(app: App | None = None, *, auth: AuthConfig | None = None, std
         "dine",
         http_policy=app.http_policy,
         lifespan=lifespan,
-        version=__version__,
+        version=BUILD.version,
         instructions=INSTRUCTIONS,
         auth=Verifier(auth) if auth is not None else None,
         mask_error_details=True,
@@ -344,7 +344,8 @@ def create_server(app: App | None = None, *, auth: AuthConfig | None = None, std
         )
         def availability_grid() -> str:
             """Self-contained venue/day observations; no browser requests to providers."""
-            return (resources.files("dine_mcp") / "ui" / "availability.html").read_text(encoding="utf-8")
+            template = (resources.files("dine_mcp") / "ui" / "availability.html").read_text(encoding="utf-8")
+            return render_app(template)
 
     return mcp
 
@@ -364,9 +365,16 @@ def serve(transport: str, host: str, port: int) -> None:
         auth = AuthConfig.from_env()
         server = create_server(auth=auth)
     except (AuthError, ConfigError) as exc:
-        print("dine-mcp:", *exc.args, file=sys.stderr)
+        log.error("dine-mcp: %s", " ".join(str(arg) for arg in exc.args))
         raise SystemExit(1) from None
-    server.run(transport="streamable-http", host=host, port=port, show_banner=False, **HTTP_OPTIONS)
+    server.run(
+        transport="streamable-http",
+        host=host,
+        port=port,
+        show_banner=False,
+        uvicorn_config={"log_config": None},
+        **HTTP_OPTIONS,
+    )
 
 
 def error_codes() -> list[str]:

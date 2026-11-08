@@ -12,6 +12,7 @@ from pathlib import Path
 from fastmcp import Client
 from fastmcp.client.transports import StdioTransport
 
+from dine_mcp.identity import BUILD
 from dine_mcp.places import Place
 from dine_mcp.state import Store
 
@@ -61,6 +62,9 @@ async def verify(client, expected, provider_keys, apps=False):
     if apps:
         resource = (await client.read_resource("ui://dine/availability.html"))[0]
         assert resource.mime_type == "text/html;profile=mcp-app" and "Table availability" in resource.text
+        assert f"Dine v{BUILD.version} · {BUILD.source_revision[:12]}" in resource.text
+        assert f'title="Source revision: {BUILD.source_revision}"' in resource.text
+        assert "__DINE_" not in resource.text
 
 
 async def main():

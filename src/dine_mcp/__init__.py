@@ -1,3 +1,5 @@
 """dine-mcp: restaurant table availability across booking systems, as an MCP server."""
 
-__version__ = "0.2.10"
+from importlib.metadata import version
+
+__version__ = version("dine-mcp")

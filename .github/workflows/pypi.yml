@@ -36,18 +36,22 @@ jobs:
       - name: Build and exercise the release distributions
         env:
           TAG: ${{ github.ref_name }}
+          SOURCE_REVISION: ${{ github.sha }}
         run: |
           set -euo pipefail
           version="$(python3 -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')"
           [ "$TAG" = "v$version" ]
+          python3 scripts/embed-build-identity.py "$version" "$SOURCE_REVISION"
           uv build --no-sources
           uv venv "$RUNNER_TEMP/dine-wheel"
           uv pip install --python "$RUNNER_TEMP/dine-wheel/bin/python" "dist/dine_mcp-$version-py3-none-any.whl"
-          EXPECTED_VERSION="$version" "$RUNNER_TEMP/dine-wheel/bin/python" -I - <<'PYTHON'
+          EXPECTED_VERSION="$version" EXPECTED_SOURCE_REVISION="$SOURCE_REVISION" "$RUNNER_TEMP/dine-wheel/bin/python" -I - <<'PYTHON'
           import os
           from importlib import metadata, resources
           import dine_mcp
+          from dine_mcp.identity import BUILD
           assert dine_mcp.__version__ == os.environ["EXPECTED_VERSION"]
+          assert (BUILD.service, BUILD.version, BUILD.source_revision) == ("dine", os.environ["EXPECTED_VERSION"], os.environ["EXPECTED_SOURCE_REVISION"])
           assert (resources.files("dine_mcp") / "ui/availability.html").read_bytes()
           files = metadata.distribution("dine-mcp").files
           assert any(str(path).endswith("/licenses/NOTICE") for path in files)

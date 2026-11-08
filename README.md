@@ -212,6 +212,12 @@ observation timestamps and unknown coverage. Filters run locally. Booking-page n
 host to open an HTTPS link only after a click; the view never calls providers or tools itself.
 Clients without Apps continue to receive the text and structured result. The option defaults off.
 
+The view's footer and retained JSON logs identify the installed application version and full
+source revision; logs also carry an opaque process instance. Image builds require `VERSION`
+matching `pyproject.toml` and a full hexadecimal `VCS_REF` before packaging. Image tags and
+digests remain delivery evidence. Source development reports an explicit `unknown` revision;
+runtime environment variables cannot relabel an installed build.
+
 Development needs Node 22+ for `make ui` (rebuild) and `make ui-check` (locked dependencies,
 reproducible bundle/notices and offline rendering/SDK tests). Python installations need no Node.
 See [roadmap](docs/ROADMAP.md) for the remaining provider and connection prerequisites.

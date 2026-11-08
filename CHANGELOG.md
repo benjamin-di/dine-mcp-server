@@ -4,6 +4,22 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and versions follow
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) over the tool surface.
 
+## [0.3.0] - 2026-11-08
+
+### Added
+
+- Show the installed application build in the availability grid footer and retained JSON logs, including startup diagnostics; verify embedded version and source revision in image acceptance.
+
+### Fixed
+
+- Keep operator command failures visible even when diagnostic logging is filtered.
+- Preserve enclosing Rich console capture and recording while attributing diagnostics, and retain native sink-error handling and terminal rendering.
+
+### Upgrade
+
+- Action required: none; existing configuration and state remain compatible.
+- Rollback: compatible with 0.2.10.
+
 ## [0.2.10] - 2026-11-02
 
 _Security: first public release carrying the 0.2.9 patched dependencies and fixes; 0.2.7 to 0.2.9 were not published publicly._

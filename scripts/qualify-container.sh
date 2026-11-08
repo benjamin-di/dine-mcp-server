@@ -6,6 +6,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 : "${SOURCE_REVISION:?Set SOURCE_REVISION to the exact source commit being checked}"
 [[ "$SOURCE_REVISION" =~ ^[a-f0-9]{40}$ ]] || { echo 'SOURCE_REVISION must be a full commit' >&2; exit 2; }
+application_version="$(python3 -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])')"
 work="$(mktemp -d)"
 run_id="$(basename "$work" | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9')"
 deps="dine-codecheck-deps:$run_id"
@@ -29,11 +30,11 @@ docker build --progress=plain -f Dockerfile.deps -t "$deps" . >"$work/deps.log" 
 printf 'Building temporary application image\n'
 docker build --progress=plain -f Dockerfile -t "$image" \
     --build-arg DINE_MCP_DEPS_IMAGE="$deps" --build-arg VCS_REF="$SOURCE_REVISION" \
-    --build-arg VERSION=code-qualification . >"$work/build.log" 2>&1 || {
+    --build-arg VERSION="$application_version" . >"$work/build.log" 2>&1 || {
     tail -60 "$work/build.log"; exit 1;
 }
 [[ "$(docker image inspect -f '{{index .Config.Labels "org.opencontainers.image.revision"}}' "$image")" == "$SOURCE_REVISION" ]]
-[[ "$(docker image inspect -f '{{index .Config.Labels "org.opencontainers.image.version"}}' "$image")" == code-qualification ]]
+[[ "$(docker image inspect -f '{{index .Config.Labels "org.opencontainers.image.version"}}' "$image")" == "$application_version" ]]
 options=(--rm --network none --read-only --user 1000:1000 --cap-drop ALL \
     --security-opt no-new-privileges --tmpfs /state:uid=1000,gid=1000,mode=0700 \
     --tmpfs /tmp:uid=1000,gid=1000,noexec,nosuid,size=32m -e DINE_PLACES=none -e DINE_EXPECTED_PROVIDER_KEYS)
