@@ -4,6 +4,54 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and versions follow
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html) over the tool surface.
 
+## [2.0.2] - 2026-11-26
+
+### Fixed
+
+- Bump patch version to `2.0.2` to publish a fresh immutable container image tag and public mirror release.
+
+### Upgrade
+
+- Action required: none.
+- Rollback: compatible with 2.0.0.
+
+## [2.0.1] - 2026-11-26
+
+### Fixed
+
+- Clean `CHANGELOG.md` export-scan finding and run offline `publish-public --check-head` in `make check`.
+
+### Upgrade
+
+- Action required: none.
+- Rollback: compatible with 2.0.0.
+
+## [2.0.0] - 2026-11-24
+
+### Changed
+
+- **Breaking:** Trim MCP server `INSTRUCTIONS` (~1.5 KB to ~0.6 KB) and refresh `surface.json` (`instructions`/`profiles` changed) while preserving read-only boundaries, missing date/party-size clarification, candidate disambiguation, and availability state semantics.
+- Contracts & callers: MCP `initialize` `instructions` text shortened for Our MCP (`/all/mcp`) and `/dine/mcp` clients; tool names, input/output schemas, annotations, HTTP routes, and configuration/environment contracts are unchanged.
+- Dependencies & starting points: upgrades cleanly in place from any `1.0.x` or `0.3.x` installation with no external dependency or gateway config changes.
+
+### Upgrade
+
+- Action required: none (stateless read-only server; no configuration, credential, or persistent data migrations).
+- Rollback: compatible with 1.0.0; stateless read-only server with no persistent state or recovery limits.
+
+## [1.0.0] - 2026-11-23
+
+### Changed
+
+- **Breaking:** Simplify advertised MCP tool input schemas for `dine_check_availability` and `dine_find_venue` (`apps` profile) by stripping Pydantic titles and null-union `anyOf` branches; callers validating strictly against `inputSchema` should omit optional parameters rather than passing explicit JSON `null` (server-side Python signatures still accept `None` / omitted arguments).
+- Remove imperative prompt-steering text from `dine_check_availability`.
+- Migrate CI checks and image promotion to native Jenkins `fleetPipeline` with `mainCandidate`.
+
+### Upgrade
+
+- Action required: none (any 0.3.x deployment upgrades in place; stateless read-only server with no configuration, credential, or persistent data migrations).
+- Rollback: compatible with 0.3.0; stateless read-only server with no persistent state or schema migration limits recovery.
+
 ## [0.3.0] - 2026-11-08
 
 ### Added

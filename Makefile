@@ -3,6 +3,7 @@ bootstrap:
 	./scripts/bootstrap.sh
 check:
 	./scripts/test.sh
+	@if [ -f publish/config.toml ] && command -v publish-public >/dev/null 2>&1; then publish-public --check-head .; fi
 qualify:
 	npm ci --prefix tools/qualification --ignore-scripts
 	uv run python scripts/qualify-protocol.py
